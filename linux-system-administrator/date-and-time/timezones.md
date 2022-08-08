@@ -20,11 +20,43 @@
 # Connect to the first app server
 ssh tony@stapp01
 
-# Check current timezone
+# Get root
+sudo -i
+
+# Check Linux version
+cat /etc/*release*
 ```
 
 ```
-[tony@stapp01 ~]$ timedatectl
+CentOS Linux release 7.6.1810 (Core)
+Derived from Red Hat Enterprise Linux 7.6 (Source)
+NAME="CentOS Linux"
+VERSION="7 (Core)"
+ID="centos"
+ID_LIKE="rhel fedora"
+VERSION_ID="7"
+PRETTY_NAME="CentOS Linux 7 (Core)"
+ANSI_COLOR="0;31"
+CPE_NAME="cpe:/o:centos:centos:7"
+HOME_URL="https://www.centos.org/"
+BUG_REPORT_URL="https://bugs.centos.org/"
+
+CENTOS_MANTISBT_PROJECT="CentOS-7"
+CENTOS_MANTISBT_PROJECT_VERSION="7"
+REDHAT_SUPPORT_PRODUCT="centos"
+REDHAT_SUPPORT_PRODUCT_VERSION="7"
+
+CentOS Linux release 7.6.1810 (Core)
+CentOS Linux release 7.6.1810 (Core)
+cpe:/o:centos:centos:7
+```
+
+```bash
+# Check current timezone
+timedatectl
+```
+
+```
       Local time: Tue 2022-08-02 23:02:27 UTC
   Universal time: Tue 2022-08-02 23:02:27 UTC
         RTC time: n/a
@@ -37,13 +69,13 @@ NTP synchronized: yes
 
 ```bash
 # Change timezone as root
-sudo timedatectl set-timezone Europe/Amsterdam
+timedatectl set-timezone Europe/Amsterdam
 
 # Check change
+timedatectl
 ```
 
 ```
-[tony@stapp01 ~]$ timedatectl
       Local time: Wed 2022-08-03 01:05:03 CEST
   Universal time: Tue 2022-08-02 23:05:03 UTC
         RTC time: n/a
