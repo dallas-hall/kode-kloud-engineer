@@ -1,4 +1,4 @@
-# Timezones
+# Network Time Protocol (NTP)
 
 ## Task
 
