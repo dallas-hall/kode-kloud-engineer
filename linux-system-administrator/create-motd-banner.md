@@ -51,7 +51,15 @@ ssh-copy-id -i ~/.ssh/id_ed25519 tony@stapp01
 ssh-copy-id -i ~/.ssh/id_ed25519 steve@stapp02
 ssh-copy-id -i ~/.ssh/id_ed25519 banner@stapp03
 ssh-copy-id -i ~/.ssh/id_ed25519 peter@stdb01
+```
 
+```
+...
+Number of key(s) added: 1
+...
+```
+
+```bash
 # Copy the files over all app servers
 scp ~/nautilus_banner tony@stapp01:~
 scp ~/nautilus_banner steve@stapp02:~
