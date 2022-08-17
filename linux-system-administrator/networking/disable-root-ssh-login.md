@@ -58,6 +58,9 @@ Number of key(s) added: 1
 ```
 
 ```bash
+# Connect to stapp01
+ssh tony@stapp01
+
 # Get root
 sudo -i
 
@@ -80,4 +83,6 @@ Permission denied, please try again.
 
 ```bash
 # Repeat the sed commands for all other app servers
+ssh steve@stapp02
+ssh banner@stapp03
 ```
