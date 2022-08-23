@@ -66,16 +66,16 @@ drwxrws--- 2 root sysadmin 4.0K Aug 23 09:25 /sysadmin/data
 
 Note the *s* in the groups execution bit, this is the GUID.
 
-```
+```bash
 # Test the setup
 cd /sysadmin
-touch test
-ls -Ahl test
+touch test.txt
+ls -Ahl test.txt
 ```
 
 ```
 drwxrws--- 2 root sysadmin 4.0K Aug 23 09:25 data
--rw-r--r-- 1 root sysadmin    0 Aug 23 09:28 test
+-rw-r--r-- 1 root sysadmin    0 Aug 23 09:28 test.txt
 ```
 
 Even though we created the file as *root* the owning group is *sysadmin*.
