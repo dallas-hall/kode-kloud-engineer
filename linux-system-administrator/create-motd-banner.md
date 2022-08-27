@@ -16,48 +16,7 @@
 
 ## Steps
 
-```bash
-# Create .ssh folder and keys
-mkdir -p ~/.ssh
-ssh-keygen -t ed25519
-```
-
-```
-Generating public/private ed25519 key pair.
-Enter file in which to save the key (/home/thor/.ssh/id_ed25519):
-Enter passphrase (empty for no passphrase):
-Enter same passphrase again:
-Your identification has been saved in /home/thor/.ssh/id_ed25519.
-Your public key has been saved in /home/thor/.ssh/id_ed25519.pub.
-The key fingerprint is:
-SHA256:18HXZAnXRpqTDbImwjdDsjP5gjv4iRBuBuKuEPaBbkg thor@jump_host.stratos.xfusioncorp.com
-The key's randomart image is:
-+--[ED25519 256]--+
-|        . . ..oo*|
-|       . = . o.@o|
-|        B = = *.o|
-|  .    . * * o . |
-|+E..  . S o .    |
-|B+.... . o       |
-|o+=.. o          |
-|+o . o o         |
-|o.  . o          |
-+----[SHA256]-----+
-```
-
-```bash
-# Copy keys
-ssh-copy-id -i ~/.ssh/id_ed25519 tony@stapp01
-ssh-copy-id -i ~/.ssh/id_ed25519 steve@stapp02
-ssh-copy-id -i ~/.ssh/id_ed25519 banner@stapp03
-ssh-copy-id -i ~/.ssh/id_ed25519 peter@stdb01
-```
-
-```
-...
-Number of key(s) added: 1
-...
-```
+Follow [Passwordless ssh setup](networking/passwordless-ssh-access.md) for every user.
 
 ```bash
 # Copy the files over all app servers
