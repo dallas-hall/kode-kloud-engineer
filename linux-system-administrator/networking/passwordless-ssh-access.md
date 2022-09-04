@@ -51,6 +51,7 @@ The key's randomart image is:
 ssh-copy-id -i ~/.ssh/id_ed25519 tony@stapp01
 ssh-copy-id -i ~/.ssh/id_ed25519 steve@stapp02
 ssh-copy-id -i ~/.ssh/id_ed25519 banner@stapp03
+ssh-copy-id -i ~/.ssh/id_ed25519 clint@stbkp01
 ```
 
 ```
@@ -64,6 +65,7 @@ Number of key(s) added: 1
 ssh tony@stapp01
 ssh steve@stapp02
 ssh banner@stapp03
+ssh clint@stbkp01
 
 # Configure ssh config
 cat > ~/.ssh/config
@@ -84,6 +86,11 @@ Host stapp03
 	User banner
 	IdentityFile ~/.ssh/id_ed25519
 	PreferredAuthentications publickey
+
+Host stbkp01
+	User clint
+	IdentityFile ~/.ssh/id_ed25519
+	PreferredAuthentications publickey
 ```
 
 Close the file with `^D`
@@ -96,4 +103,5 @@ chmod 644 ~/.ssh/config
 ssh stapp01
 ssh stapp02
 ssh stapp03
+ssh stbkp01
 ```
