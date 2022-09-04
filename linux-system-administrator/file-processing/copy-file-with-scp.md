@@ -15,8 +15,6 @@
 
 ## Steps
 
-
-
 ```bash
 # Copy the files over to app3 server
 scp /tmp/nautilus.txt.gpg banner@stapp03:/home/opt
