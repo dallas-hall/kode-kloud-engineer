@@ -47,11 +47,13 @@ The key's randomart image is:
 ```
 
 ```bash
-# Copy keys
+# Copy keys to the servers that you need
 ssh-copy-id -i ~/.ssh/id_ed25519 tony@stapp01
 ssh-copy-id -i ~/.ssh/id_ed25519 steve@stapp02
 ssh-copy-id -i ~/.ssh/id_ed25519 banner@stapp03
 ssh-copy-id -i ~/.ssh/id_ed25519 clint@stbkp01
+ssh-copy-id -i ~/.ssh/id_ed25519 loki@stlb01
+
 ```
 
 ```
@@ -66,6 +68,7 @@ ssh tony@stapp01
 ssh steve@stapp02
 ssh banner@stapp03
 ssh clint@stbkp01
+ssh loki@stlb01
 
 # Configure ssh config
 cat > ~/.ssh/config
@@ -91,6 +94,11 @@ Host stbkp01
 	User clint
 	IdentityFile ~/.ssh/id_ed25519
 	PreferredAuthentications publickey
+
+Host stlb01
+	User loki
+	IdentityFile ~/.ssh/id_ed25519
+	PreferredAuthentications publickey
 ```
 
 Close the file with `^D`
@@ -104,4 +112,5 @@ ssh stapp01
 ssh stapp02
 ssh stapp03
 ssh stbkp01
+ssh stlb01
 ```
