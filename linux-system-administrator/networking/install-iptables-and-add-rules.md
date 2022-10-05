@@ -234,6 +234,10 @@ Redirecting to /bin/systemctl reload iptables.service
 ```
 
 ```bash
+# Repeat the iptables steps for the other servers and check again.
+ssh steve@stapp02
+ssh banner@stapp03
+
 # Check that connections are blocked from thor jumpbox
 curl stapp01:3001
 curl stapp02:3001
@@ -242,6 +246,8 @@ curl stapp03:3001
 
 ```
 curl: (7) Failed connect to stapp01:3001; Connection refused
+curl: (7) Failed connect to stapp02:3001; Connection refused
+curl: (7) Failed connect to stapp03:3001; Connection refused
 ```
 
 ```bash
@@ -270,10 +276,4 @@ define( 'WP_USE_THEMES', true );
 
 /** Loads the WordPress Environment and Template */
 require( dirname( __FILE__ ) . '/wp-blog-header.php' );
-```
-
-```bash
-# Repeat the iptables steps for the other servers and check again.
-ssh steve@stapp02
-ssh banner@stapp03
 ```
