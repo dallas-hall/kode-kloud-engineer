@@ -25,7 +25,7 @@ Please do not modify this file manually!
 * Block in file - https://docs.ansible.com/ansible/latest/collections/ansible/builtin/blockinfile_module.html
 ## Steps
 
-Follow [Passwordless ssh setup](networking/passwordless-ssh-access.md) for every user.
+Follow [Passwordless ssh setup](../../linux-system-administrator/networking/passwordless-ssh-access.md) for every user.
 
 ```bash
 # Check Ansible is install

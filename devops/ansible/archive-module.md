@@ -16,7 +16,7 @@
 
 ## Steps
 
-Follow [Passwordless ssh setup](networking/passwordless-ssh-access.md) for every user.
+Follow [Passwordless ssh setup](../../linux-system-administrator/networking/passwordless-ssh-access.md) for every user.
 
 ```bash
 # Check Ansible is install
