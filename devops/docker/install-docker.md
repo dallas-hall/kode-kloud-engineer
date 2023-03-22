@@ -1,4 +1,4 @@
-# Docker Bridge Network Setup
+# Install Docker
 
 ## Task
 
@@ -34,7 +34,7 @@ yum install -y yum-utils
 ```
 ...
 Updated:
-  yum-utils.noarch 0:1.1.31-54.el7_8                                              
+  yum-utils.noarch 0:1.1.31-54.el7_8
 
 Complete!
 ```
@@ -60,9 +60,9 @@ yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 ```
 ...
 Installed:
-  containerd.io.x86_64 0:1.6.15-3.1.el7                                           
-  docker-ce.x86_64 3:20.10.23-3.el7                                               
-  docker-ce-cli.x86_64 1:20.10.23-3.el7                                           
+  containerd.io.x86_64 0:1.6.15-3.1.el7
+  docker-ce.x86_64 3:20.10.23-3.el7
+  docker-ce-cli.x86_64 1:20.10.23-3.el7
   docker-compose-plugin.x86_64 0:2.15.1-3.el
 ...
 ```

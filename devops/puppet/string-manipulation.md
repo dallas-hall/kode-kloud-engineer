@@ -1,4 +1,4 @@
-# 
+# String Manipulation
 
 ## Task
 
@@ -11,7 +11,7 @@
 
 ## Research
 
-* Repalce strings - https://doc.wikimedia.org/puppet/puppet_types/file_line.html 
+* Repalce strings - https://doc.wikimedia.org/puppet/puppet_types/file_line.html
 
 ## Steps
 
