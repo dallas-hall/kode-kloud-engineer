@@ -11,7 +11,8 @@
 
 ## Research
 
-* Docker storage binding - https://docs.docker.com/storage/bind-mounts/
+* Docker storage binding.
+  * https://docs.docker.com/storage/bind-mounts/
 
 ## Steps
 
@@ -23,7 +24,7 @@ ssh steve@stapp02
 cat /etc/*release*
 
 # Switch to root
-sudo -i
+sudo su
 
 # View running containers
 docker ps -a
@@ -43,12 +44,12 @@ docker run -d -t \
 ```
 Unable to find image 'nginx:latest' locally
 latest: Pulling from library/nginx
-3f4ca61aafcd: Pull complete 
-50c68654b16f: Pull complete 
-3ed295c083ec: Pull complete 
-40b838968eea: Pull complete 
-88d3ab68332d: Pull complete 
-5f63362a3fa3: Pull complete 
+3f4ca61aafcd: Pull complete
+50c68654b16f: Pull complete
+3ed295c083ec: Pull complete
+40b838968eea: Pull complete
+88d3ab68332d: Pull complete
+5f63362a3fa3: Pull complete
 Digest: sha256:0047b729188a15da49380d9506d65959cce6d40291ccfb4e039f5dc7efd33286
 Status: Downloaded newer image for nginx:latest
 a1236fa065ebe7f9c756eedd9dc314ee63fa6c6dead1b28a55fb769c09f08a66

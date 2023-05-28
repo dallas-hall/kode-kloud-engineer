@@ -11,7 +11,8 @@
 
 ## Research
 
-* Rolling updates - https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+* Rolling updates.
+  * https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
 
 ## Steps
 
@@ -78,6 +79,8 @@ spec:
 status: {}
 ```
 
+Close the file `:x`
+
 ```bash
 # Deploy the deployment
 k apply -f deploy.yaml
@@ -114,6 +117,8 @@ spec:
 status:
   loadBalancer: {}
 ```
+
+Close the file `:x`
 
 ```bash
 # Deploy the service

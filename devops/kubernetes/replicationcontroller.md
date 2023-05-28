@@ -12,7 +12,8 @@
 
 ## Research
 
-* RC - https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/
+* ReplicationControllers.\
+  * https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/
 
 ## Steps
 
@@ -59,6 +60,9 @@ spec:
         - containerPort: 80
 ```
 
+Close the file `^D`
+
+
 ```bash
 # Create the RC object
 k apply -f rc.yaml
@@ -70,7 +74,7 @@ replicationcontroller/nginx-replicationcontroller created
 
 ```bash
 # View the RC object
-k get replicationcontrollers 
+k get replicationcontrollers
 ```
 
 ```

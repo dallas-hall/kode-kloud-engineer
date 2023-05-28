@@ -11,7 +11,8 @@
 
 ## Research
 
-* Files -  https://coderwall.com/p/yfnesa/create-a-symlink-in-puppet &  https://puppet.com/docs/puppet/latest/types/file.html
+* Files.
+  * https://coderwall.com/p/yfnesa/create-a-symlink-in-puppet &  https://puppet.com/docs/puppet/latest/types/file.html
 
 ## Steps
 
@@ -26,7 +27,7 @@ echo $PATH | grep puppet
 
 ```bash
 # Switch to root
-sudo -i
+sudo -su
 
 # Create the file
 cat > /etc/puppetlabs/code/environments/production/manifests/news.pp
@@ -39,12 +40,14 @@ file { '/opt/data/ecommerce.txt':
 }
 ```
 
+Close the file `^D`
+
 ```bash
 # Log into app server
 ssh tony@stapp01
 
 # Switch to root
-sudo -i
+sudo su
 
 # Pull the changes
 puppet agent -t

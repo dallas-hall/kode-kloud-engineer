@@ -11,7 +11,8 @@
 
 ## Research
 
-* Repalce strings - https://doc.wikimedia.org/puppet/puppet_types/file_line.html
+* Repalce strings.
+  * https://doc.wikimedia.org/puppet/puppet_types/file_line.html
 
 ## Steps
 
@@ -26,7 +27,7 @@ echo $PATH | grep puppet
 
 ```bash
 # Switch to root
-sudo -i
+sudo su
 
 # Create the expected file
 cat > /etc/puppetlabs/code/environments/production/manifests/demo.pp
@@ -41,12 +42,14 @@ file_line { 'Update some text file.':
 }
 ```
 
+Close the file `^D`
+
 ```bash
 # Connect to application server which are the puppet agents
 ssh steve@stapp02
 
 # Switch to root
-sudo -i
+sudo su
 
 # Create a backup
 cp /opt/sysops/demo.txt /opt/sysops/demo.txt.bak

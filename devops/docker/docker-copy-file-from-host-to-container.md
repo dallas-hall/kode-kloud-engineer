@@ -11,7 +11,8 @@
 
 ## Research
 
-* Docker copy files from host to container - https://stackoverflow.com/a/31971697
+* Docker copy files from host to container.
+  * https://stackoverflow.com/a/31971697
 
 ## Steps
 
@@ -23,7 +24,7 @@ ssh tony@stapp01
 cat /etc/*release*
 
 # Switch to root
-sudo -i
+sudo su
 
 # View running containers
 docker ps -a

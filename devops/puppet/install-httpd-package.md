@@ -11,16 +11,21 @@
 
 ## Research
 
-* Install a package - https://www.puppetcookbook.com/posts/install-package.html & https://puppet.com/docs/puppet/7/types/package.html
-* Nodes - https://puppet.com/docs/puppet/7/lang_node_definitions.html
-* Classes - https://puppet.com/docs/puppet/7/lang_classes.html
-* Packages - https://puppet.com/docs/puppet/7/types/package.html
+* Install a package.
+  * https://www.puppetcookbook.com/posts/install-package.html
+  * https://puppet.com/docs/puppet/7/types/package.html
+* Nodes.
+  * https://puppet.com/docs/puppet/7/lang_node_definitions.html
+* Classes.
+  * https://puppet.com/docs/puppet/7/lang_classes.html
+* Packages.
+  * https://puppet.com/docs/puppet/7/types/package.html
 
 ## Steps
 
 ```bash
 # Switch to root
-sudo -i
+sudo -su
 
 # Check puppet is in our PATH
 echo $PATH | grep puppet
@@ -67,7 +72,7 @@ Close the file with control + d i.e. `^D`
 ```bash
 # Connect to app server & gain root access.
 ssh steve@stapp02
-sudo -i
+sudo su
 
 # Apply the puppet configuration on this node
 puppet agent -t

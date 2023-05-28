@@ -11,8 +11,10 @@
 
 ## Research
 
-* Playbooks - https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html
-* Archive - https://docs.ansible.com/ansible/latest/collections/community/general/archive_module.html
+* Playbooks.
+  * https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html
+* Archive.
+  * https://docs.ansible.com/ansible/latest/collections/community/general/archive_module.html
 
 ## Steps
 
@@ -55,7 +57,7 @@ cat > playbook.yml
   hosts: all
   become: true
   become_user: root
-  
+
   tasks:
   - name: Compress a folder.
     archive:
@@ -75,8 +77,8 @@ ansible-playbook -i inventory playbook.yml
 ```
 ...
 PLAY RECAP ****************************************************************************************************************************************************************
-stapp01                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-stapp02                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+stapp01                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+stapp02                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 stapp03                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
 

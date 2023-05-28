@@ -11,7 +11,8 @@
 
 ## Research
 
-* Rolling updates - https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+* Rolling updates.
+  * https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
 
 ## Steps
 

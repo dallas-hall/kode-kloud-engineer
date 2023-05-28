@@ -11,11 +11,16 @@
 
 ## Research
 
-* Install packages - https://docs.ansible.com/ansible/latest/modules/package_module.html
-* Regex replace - https://docs.ansible.com/ansible/latest/modules/replace_module.html
-* Files - https://docs.ansible.com/ansible/latest/modules/file_module.html
-* Templates - https://docs.ansible.com/ansible/latest/modules/template_module.html
-* Services - https://docs.ansible.com/ansible/latest/modules/service_module.html
+* Install packages.
+  * https://docs.ansible.com/ansible/latest/modules/package_module.html
+* Regex replace.
+  * https://docs.ansible.com/ansible/latest/modules/replace_module.html
+* Files.
+  * https://docs.ansible.com/ansible/latest/modules/file_module.html
+* Templates.
+  * https://docs.ansible.com/ansible/latest/modules/template_module.html
+* Services.
+  * https://docs.ansible.com/ansible/latest/modules/service_module.html
 
 ## Steps
 
@@ -113,6 +118,8 @@ cat > httpd.yml
         state: started
         enabled: yes
 ```
+
+Close the file with control + d i.e. `^D`
 
 ```bash
 # Run playbook

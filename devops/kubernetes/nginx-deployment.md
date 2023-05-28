@@ -11,8 +11,10 @@
 
 ## Research
 
-* Deployment - https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
-* NodePort - https://kubernetes.io/docs/concepts/services-networking/service/
+* Deployment.
+  * https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+* NodePort.
+  * https://kubernetes.io/docs/concepts/services-networking/service/
 
 ## Steps
 
@@ -59,6 +61,8 @@ spec:
         - containerPort: 443
 ```
 
+Close the file `:x`
+
 ```bash
 # Create the deployment
 k apply -f deploy.yaml
@@ -97,6 +101,9 @@ spec:
     app: nginx-deployment
   type: NodePort
 ```
+
+Close the file `:x`
+
 
 ```bash
 # Create the NodePort

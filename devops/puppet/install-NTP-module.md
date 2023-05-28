@@ -11,10 +11,14 @@
 
 ## Research
 
-* Install the NTP module - https://puppet.com/docs/puppet/latest/quick_start_ntp.html
-* Create necessary file - https://puppet.com/docs/puppet/latest/quick_start_ntp.html
-* Create custom class - https://fullstack-puppet-docs.readthedocs.io/en/latest/puppet_modules.html
-* Configuring iburst - https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s2_configuring_the_iburst_option
+* Install the NTP module.
+  * https://puppet.com/docs/puppet/latest/quick_start_ntp.html
+* Create necessary file.
+  * https://puppet.com/docs/puppet/latest/quick_start_ntp.html
+* Create custom class.
+  * https://fullstack-puppet-docs.readthedocs.io/en/latest/puppet_modules.html
+* Configuring iburst.
+  * https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s2_configuring_the_iburst_option
 
 ## Steps
 
@@ -29,7 +33,7 @@ echo $PATH | grep puppet
 
 ```bash
 # Switch to root
-sudo -i
+sudo su
 
 # Install the NTP module
 puppet module install puppetlabs-ntp
@@ -71,7 +75,7 @@ Close the file with control + d i.e. `^D`
 ssh steve@stapp02
 
 # Switch to root
-sudo -i
+sudo su
 
 # Get configuration changes
 puppet agent -t

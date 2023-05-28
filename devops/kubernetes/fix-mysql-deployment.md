@@ -11,9 +11,13 @@
 
 ## Research
 
-* PV and PVC - <https://kubernetes.io/docs/concepts/storage/persistent-volumes/> and <https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/>
-* Deployments - <https://kubernetes.io/docs/concepts/workloads/controllers/deployment/>
-* Secerts - <https://kubernetes.io/docs/concepts/configuration/secret/>
+* PV and PVC.
+  * https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+  * https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/>
+* Deployments.
+  * https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+* Secerts
+  * https://kubernetes.io/docs/concepts/configuration/secret/
 
 ## Steps
 
@@ -65,15 +69,17 @@ vi mysql_deployment
 ```yaml
 # Fix indentation
 metadata:
-  name: mysql         
-  labels:             
-  app: mysql-app 
+  name: mysql
+  labels:
+  app: mysql-app
 
 metadata:
-  name: mysql         
-  labels:             
-    app: mysql-app 
+  name: mysql
+  labels:
+    app: mysql-app
 ```
+
+Close the file `:x`
 
 ```bash
 # Deploy the app.
@@ -102,11 +108,13 @@ accessModes:
   - ReadWriteOnce
 
 # Change array to string.
-persistentVolumeReclaimPolicy: 
+persistentVolumeReclaimPolicy:
   - Retain
 
-persistentVolumeReclaimPolicy: Retain  
+persistentVolumeReclaimPolicy: Retain
 ```
+
+Close the file `:x`
 
 ```bash
 # Deploy the app.
@@ -134,6 +142,8 @@ accessModes: ReadWriteOnce
 accessModes:
   - ReadWriteOnce
 ```
+
+Close the file `:x`
 
 ```bash
 # Deploy the app.
@@ -170,6 +180,8 @@ resources:
     storage: 250Mi
 ```
 
+Close the file `:x`
+
 ```bash
 # Deploy the app.
 k apply -f /home/thor/mysql_deployment.yml
@@ -196,18 +208,20 @@ vi /home/thor/mysql_deployment.yml
 
 ```yaml
 # Fix indentation for all values
-- name: MYSQL_ROOT_PASSWORD 
-  valueFrom:     
+- name: MYSQL_ROOT_PASSWORD
+  valueFrom:
     secretKeyRef:
-    name: mysql-root-pass 
+    name: mysql-root-pass
       key: password
 
-- name: MYSQL_ROOT_PASSWORD 
-  valueFrom:     
+- name: MYSQL_ROOT_PASSWORD
+  valueFrom:
     secretKeyRef:
-      name: mysql-root-pass 
+      name: mysql-root-pass
       key: password
 ```
+
+Close the file `:x`
 
 ```bash
 # Deploy the app.
@@ -233,13 +247,15 @@ vi /home/thor/mysql_deployment.yml
 ```yaml
 # Fix indentation of all values
 - name: mysql-persistent-storage
-    persistentVolumeClaim: 
+    persistentVolumeClaim:
     claimName: mysql-pv-claim
 
 - name: mysql-persistent-storage
-  persistentVolumeClaim: 
+  persistentVolumeClaim:
     claimName: mysql-pv-claim
 ```
+
+Close the file `:x`
 
 ```bash
 # Deploy the app.
@@ -263,27 +279,29 @@ There are now the following syntax errors in this YAML file.
 vi /home/thor/mysql_deployment.yml
 ```
 
+Close the file `:x`
+
 ```yaml
 # Fix indentation of all values
 metadata:
-  name: mysql-deployment           
-  labels:                         
-  app: mysql-app   
+  name: mysql-deployment
+  labels:
+  app: mysql-app
 spec:
   selector:
-    matchlabels:                  
-    app: mysql-app 
-    tier: mysql 
+    matchlabels:
+    app: mysql-app
+    tier: mysql
 
 metadata:
-  name: mysql-deployment           
-  labels:                         
-    app: mysql-app   
+  name: mysql-deployment
+  labels:
+    app: mysql-app
 spec:
   selector:
-    matchLabels:                  
-      app: mysql-app 
-      tier: mysql 
+    matchLabels:
+      app: mysql-app
+      tier: mysql
 ```
 
 ```bash

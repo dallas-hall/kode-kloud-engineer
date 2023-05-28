@@ -11,11 +11,16 @@
 
 ## Research
 
-* Playbooks - https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html
-* Create file - https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html
-* Host Variables - https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html
-* Gather Facts - https://docs.ansible.com/ansible/latest/collections/ansible/builtin/gather_facts_module.html & https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_vars_facts.html
-* Copy - https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html
+* Playbooks.
+  * https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html
+* Create file.
+  * https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html
+* Host Variables.
+  * https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html
+* Gather Facts.
+  * https://docs.ansible.com/ansible/latest/collections/ansible/builtin/gather_facts_module.html & https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_vars_facts.html
+* Copy.
+  * https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html
 
 
 ## Steps
@@ -101,8 +106,9 @@ cat > index.yml
         owner: apache
         group: apache
         mode: '0744'
-
 ```
+
+Close the file with control + d i.e. `^D`
 
 ```bash
 # Run the playbook
@@ -112,9 +118,9 @@ ansible-playbook -i inventory index.yml
 ```
 ...
 PLAY RECAP ***********************************************************************
-stapp01                    : ok=7    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-stapp02                    : ok=7    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-stapp03                    : ok=7    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+stapp01                    : ok=7    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+stapp02                    : ok=7    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+stapp03                    : ok=7    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
 
 ```bash

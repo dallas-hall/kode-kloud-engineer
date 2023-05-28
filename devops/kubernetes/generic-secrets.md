@@ -11,8 +11,10 @@
 
 ## Research
 
-* Commands - https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
-* Secrets - https://kubernetes.io/docs/concepts/configuration/secret/
+* Commands.
+  * https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
+* Secrets.
+  * https://kubernetes.io/docs/concepts/configuration/secret/
 
 ## Steps
 

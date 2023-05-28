@@ -11,7 +11,7 @@
 
 ## Research
 
-None
+None.
 
 ## Steps
 
@@ -51,7 +51,7 @@ index.html
 ssh natasha@ststor01
 
 # Switch to root
-sudo -i
+sudo su
 
 # Copy the file, it will automatically get deleted later
 cp /tmp/index.html /usr/src/kodekloudrepos/demo/

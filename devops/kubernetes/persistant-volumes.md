@@ -11,8 +11,10 @@
 
 ## Research
 
-* PV and PVC - https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/
-* NodePort - https://kubernetes.io/docs/concepts/services-networking/service/
+* PV and PVC.
+  * https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/
+* NodePort.
+  * https://kubernetes.io/docs/concepts/services-networking/service/
 
 ## Steps
 
@@ -52,10 +54,16 @@ spec:
     path: "/mnt/dba"
 ```
 
+Close the file with control + d i.e. `^D`
+
+
 ```bash
 # Create the Persistent Volume Claim file
 cat > pvc.yml
 ```
+
+Close the file with control + d i.e. `^D`
+
 
 ```yaml
 apiVersion: v1
@@ -111,6 +119,8 @@ k run pod-xfusion --image=httpd:latest --dry-run -o yaml > pod.yml
 vi pod.yml
 ```
 
+Close the file `:x`
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -136,6 +146,8 @@ spec:
         claimName: pvc-xfusion
   restartPolicy: Always
 ```
+
+Close the file `:x`
 
 ```bash
 # Create & check the pod
@@ -178,6 +190,8 @@ spec:
   type: NodePort
 status:
 ```
+
+Close the file `:x`
 
 ```bash
 # Create and check the NodePort

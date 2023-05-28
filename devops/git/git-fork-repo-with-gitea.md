@@ -12,7 +12,8 @@
 
 ## Research
 
-* Git Fork - https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow
+* Git Fork.
+  * https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow
 
 ## Steps
 

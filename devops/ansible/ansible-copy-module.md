@@ -11,7 +11,8 @@
 
 ## Research
 
-* Copy module - https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html
+* Copy module.
+  * https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html
 
 ## Steps
 

@@ -21,8 +21,10 @@ Please do not modify this file manually!
 
 ## Research
 
-* Playbooks - https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html
-* Block in file - https://docs.ansible.com/ansible/latest/collections/ansible/builtin/blockinfile_module.html
+* Playbooks.
+  * https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html
+* Block in file.
+  * https://docs.ansible.com/ansible/latest/collections/ansible/builtin/blockinfile_module.html
 ## Steps
 
 Follow [Passwordless ssh setup](../../linux-system-administrator/networking/passwordless-ssh-access.md) for every user.
@@ -104,9 +106,9 @@ ansible-playbook -i inventory playbook.yml
 ```
 ...
 PLAY RECAP ***********************************************************************
-stapp01                    : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-stapp02                    : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-stapp03                    : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
+stapp01                    : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+stapp02                    : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+stapp03                    : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
 
 ```bash

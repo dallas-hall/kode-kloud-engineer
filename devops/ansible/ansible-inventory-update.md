@@ -11,7 +11,8 @@
 
 ## Research
 
-* Inventory - https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html
+* Inventory.
+  * https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html
 
 ## Steps
 
@@ -54,7 +55,6 @@ stapp03 | SUCCESS => {
     "ping": "pong"
 }
 ```
-
 
 ```bash
 # Run playbook

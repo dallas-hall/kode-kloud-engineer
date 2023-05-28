@@ -11,8 +11,11 @@
 
 ## Research
 
-* Create a bare repo - https://git-scm.com/docs/git-init#Documentation/git-init.txt---bare & https://stackoverflow.com/a/7632497
-* Create hook to block pushes to master - https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks
+* Create a bare repo.
+  * https://git-scm.com/docs/git-init#Documentation/git-init.txt---bare
+  * https://stackoverflow.com/a/7632497
+* Create hook to block pushes to master .
+  * https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks
 
 ## Steps
 
@@ -24,7 +27,7 @@ ssh natasha@ststor01
 cat /etc/*release*
 
 # Switch to root
-sudo -i
+sudo su
 
 # Install git
 yum install -y git
@@ -33,7 +36,7 @@ yum install -y git
 ```
 ...
 Installed:
-  git.x86_64 0:1.8.3.1-23.el7_8  
+  git.x86_64 0:1.8.3.1-23.el7_8
 ...
 ```
 

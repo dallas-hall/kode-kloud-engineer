@@ -11,8 +11,10 @@
 
 ## Research
 
-* https://coderwall.com/p/yfnesa/create-a-symlink-in-puppet
-* https://puppet.com/docs/puppet/latest/types/file.html
+* Symlinking.
+  * https://coderwall.com/p/yfnesa/create-a-symlink-in-puppet
+* Files.
+  * https://puppet.com/docs/puppet/latest/types/file.html
 
 ## Steps
 
@@ -27,7 +29,7 @@ echo $PATH | grep puppet
 
 ```bash
 # Switch to root
-sudo -i
+sudo su
 
 # Create the expected file
 cat > /etc/puppetlabs/code/environments/production/manifests/cluster.pp
@@ -43,12 +45,14 @@ class symlink {
 include symlink
 ```
 
-```
+Close the file `^D`
+
+```bash
 # Connect to application servers which are the puppet agents
 ssh banner@stapp03
 
 # Switch to root
-sudo -i
+sudo su
 
 # Get configuration changes
 puppet agent -t

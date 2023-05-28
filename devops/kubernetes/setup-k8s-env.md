@@ -11,7 +11,8 @@
 
 ## Research
 
-* Bash completion - https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/
+* Bash completion.
+  * https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/
 
 ## Steps
 

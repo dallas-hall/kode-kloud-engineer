@@ -11,7 +11,7 @@
 
 ## Research
 
-None
+None.
 
 ## Steps
 
@@ -23,7 +23,7 @@ ssh natasha@ststor01
 cat /etc/*release*
 
 # Switch to root
-sudo -i
+sudo su
 
 # Go to the correct path
 cd /usr/src/kodekloudrepos

@@ -25,7 +25,7 @@ ssh steve@stapp02
 cat /etc/*release*
 
 # Switch to root
-sudo -i
+sudo su
 
 # Set up the Docker repo
 yum install -y yum-utils
@@ -91,7 +91,6 @@ docker-compose --version
 ```
 Docker Compose version v2.15.1
 ```
-
 
 ```bash
 # Start Docker service
