@@ -1,8 +1,8 @@
-# Ansible Copy Module
+# Ansible File Module
 
 ## Task
 
-> One of the Nautilus DevOps team members was working on to test an Ansible playbook on jump host. However, he was only able to create the inventory, and due to other priorities that came in he has to work on other tasks. Please pick up this task from where he left off and complete it. Below are more details about the task:<br><br>The inventory file `/home/thor/ansible/inventory` seems to be having some issues, please fix them. The playbook needs to be run on App Server 2 in Stratos DC, so inventory file needs to be updated accordingly.<br>Create a playbook `/home/thor/ansible/playbook.yml` and add a task to create an empty file `/tmp/file.txt` on App Server 2.
+> The Nautilus DevOps team is working to test several Ansible modules on servers in Stratos DC. Recently they wanted to test the file creation on remote hosts using Ansible. Find below more details about the task:<br><br>a. Create an inventory file `~/playbook/inventory` on jump host and add all app servers in it.<br>b. Create a playbook `~/playbook/playbook.yml` to create a blank file `/tmp/data.txt` on all app servers.<br>c. The `/tmp/data.txt` file permission must be `0755`.<br>d. The user/group owner of file `/tmp/data.txt` must be `tony` on app server 1, `steve` on app server 2 and `banner` on app server 3.
 
 ## Preliminary Steps
 
@@ -13,6 +13,8 @@
 
 * File module.
   * https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html
+* Special variables
+  * https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html
 
 ## Steps
 
@@ -34,18 +36,30 @@ ansible 2.9.9
 
 ```bash
 # Create inventory
-cat > /home/thor/ansible/inventory
+cat > ~/playbook/inventory
 ```
 
 ```yaml
-stapp02 ansible_host=172.16.238.11 ansible_ssh_pass=Am3ric@ ansible_user=steve
+all:
+  hosts:
+    stapp01:
+      ansible_user: tony
+      ansible_password: Ir0nM@n
+    stapp02:
+      ansible_user: steve
+      ansible_password: Am3ric@
+    stapp03:
+      ansible_user: banner
+      ansible_password: BigGr33n
+  vars:
+    ansible_connection: ssh
 ```
 
 Close the file with control + d i.e. `^D`
 
 ```bash
 # Create the playbook
-cat > /home/thor/ansible/playbook.yml
+cat > ~/playbook/playbook.yml
 ```
 
 ```yaml
@@ -54,34 +68,43 @@ cat > /home/thor/ansible/playbook.yml
   tasks:
     - name: Create file.
       file:
-        path: /tmp/file.txt
+        path: /tmp/data.txt
         state: touch
+        mode: '0755'
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
 ```
 
 Close the file with control + d i.e. `^D`
 
 ```bash
 # Run playbook
-cd ansible
+cd playbook
 ansible-playbook -i inventory playbook.yml
 ```
 
 ```
 ...
-PLAY RECAP ***********************************************************************
+PLAY RECAP *************************************************************************************************************************************
+stapp01                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 stapp02                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+stapp03                    : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
 
 Looks okay, but lets check.
 
 ```bash
 # Check if file exists
-ansible -i inventory all -m shell -a 'ls -Ahl /tmp/file.txt'
+ansible -i inventory all -m shell -a 'ls -Ahl /tmp/data.txt'
 ```
 
 ```
 stapp02 | CHANGED | rc=0 >>
--rw-r--r-- 1 root root 0 Jul 31 09:34 /tmp/file.txt
+-rwxr-xr-x 1 steve steve 0 Aug  1 08:53 /tmp/data.txt
+stapp01 | CHANGED | rc=0 >>
+-rwxr-xr-x 1 tony tony 0 Aug  1 08:53 /tmp/data.txt
+stapp03 | CHANGED | rc=0 >>
+-rwxr-xr-x 1 banner banner 0 Aug  1 08:53 /tmp/data.txt
 ```
 
 We are done.

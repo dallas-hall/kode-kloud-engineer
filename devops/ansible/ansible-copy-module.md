@@ -2,7 +2,7 @@
 
 ## Task
 
-> There is data on jump host that needs to be copied on all application servers in Stratos DC. Nautilus DevOps team want to perform this task using Ansible. Perform the task as per details mentioned below:<br><br>a. On jump host create an inventory file `/home/thor/ansible/inventory` and add all application servers as managed nodes.<br>b. On jump host create a playbook `/home/thor/ansible/playbook.yml` to copy `/usr/src/data/index.html` file to all application servers at location `/opt/data`.
+> There is data on jump host that needs to be copied on all application servers in Stratos DC. Nautilus DevOps team want to perform this task using Ansible. Perform the task as per details mentioned below:<br><br>a. On jump host create an inventory file `/home/thor/ansible/inventory` and add all application servers as managed nodes.<br>b. On jump host create a playbook `/home/thor/ansible/playbook.yml` to copy `/usr/src/sysops/index.html` file to all application servers at location `/opt/data`.
 >
 ## Preliminary Steps
 
@@ -66,8 +66,8 @@ cat > /home/thor/ansible/playbook.yml
   tasks:
     - name: Copy file.
       copy:
-        src: /usr/src/data/index.html
-        dest: /opt/data
+        src: /usr/src/sysops/index.html
+        dest: /opt/sysops
 ```
 
 Close the file with control + d i.e. `^D`
@@ -90,16 +90,19 @@ Looks okay, but lets check.
 
 ```bash
 # Check if file exists
-ansible -i inventory all -m shell -a 'ls /opt/data'
+ansible -i inventory all -m shell -a 'ls -Ahl /opt/sysops'
 ```
 
 ```
 stapp02 | CHANGED | rc=0 >>
-index.html
-stapp03 | CHANGED | rc=0 >>
-index.html
+total 4.0K
+-rw-r--r-- 1 root root 35 Aug  1 09:00 index.html
 stapp01 | CHANGED | rc=0 >>
-index.html
+total 4.0K
+-rw-r--r-- 1 root root 35 Aug  1 09:00 index.html
+stapp03 | CHANGED | rc=0 >>
+total 4.0K
+-rw-r--r-- 1 root root 35 Aug  1 09:00 index.html
 ```
 
 We are done.
