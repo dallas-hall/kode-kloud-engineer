@@ -18,7 +18,10 @@
 
 ```bash
 # Connect to the first app server
-ssh banner@stapp03
+ssh tony@stapp01
+
+# Check current Linux version, it was CentOS Stream 8
+cat /etc/*rel*
 
 # Switch to root
 sudo -i
@@ -40,3 +43,5 @@ ls -Ahl --color /tmp/xfusioncorp.sh
 ```
 -rwxr-xr-x 1 root root 40 Aug  5 23:31 /tmp/xfusioncorp.sh
 ```
+
+We are done.
