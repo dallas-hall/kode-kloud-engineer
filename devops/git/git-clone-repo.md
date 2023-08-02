@@ -19,11 +19,11 @@ None.
 # Connect to the storage server
 ssh natasha@ststor01
 
-# Check current Linux version, it was CentOS 7.6
+# Check current Linux version, it was CentOS Stream 8
 cat /etc/*release*
 
 # Switch to root
-sudo su
+sudo -i
 
 # Go to the correct path
 cd /usr/src/kodekloudrepos
