@@ -21,8 +21,8 @@
 # Connect to application servers
 ssh steve@stapp02
 
-# Check current Linux version, it was CentOS 7.6
-cat /etc/*release*
+# Check current Linux version, it was CentOS Steam 8
+cat /etc/*rel*
 
 # Switch to root
 sudo su
@@ -34,7 +34,7 @@ yum install -y yum-utils
 ```
 ...
 Updated:
-  yum-utils.noarch 0:1.1.31-54.el7_8
+  yum-utils-4.0.21-23.el8.noarch
 
 Complete!
 ```
@@ -60,16 +60,16 @@ yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 ```
 ...
 Installed:
-  containerd.io.x86_64 0:1.6.15-3.1.el7
-  docker-ce.x86_64 3:20.10.23-3.el7
-  docker-ce-cli.x86_64 1:20.10.23-3.el7
-  docker-compose-plugin.x86_64 0:2.15.1-3.el
+  docker-ce-3:24.0.5-1.el8.x86_64
+  docker-ce-cli-1:24.0.5-1.el8.x86_64
+  docker-ce-rootless-extras-24.0.5-1.el8.x86_64
+  docker-compose-plugin-2.20.2-1.el8.x86_64
 ...
 ```
 
 ```bash
 # Install Docker Compose manually
-curl -SL https://github.com/docker/compose/releases/download/v2.15.1/docker-compose-linux-x86_64 -o /usr/local/sbin/docker-compose
+curl -SL https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
 ```
 
 ```
@@ -89,7 +89,7 @@ docker-compose --version
 ```
 
 ```
-Docker Compose version v2.15.1
+Docker Compose version v2.20.2
 ```
 
 ```bash
@@ -109,7 +109,7 @@ systemctl status docker
 ```
 ● docker.service - Docker Application Container Engine
    Loaded: loaded (/usr/lib/systemd/system/docker.service; enabled; vendor preset: disabled)
-   Active: active (running) since Mon 2023-01-23 11:26:36 UTC; 5s ago
+   Active: active (running) since Mon 2023-08-07 03:28:55 UTC; 37s ago
 ...
 ```
 
