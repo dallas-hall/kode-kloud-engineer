@@ -34,3 +34,5 @@ ssh banner@stapp03 ls -Ahl /home/opt
 ...
 -rw-r--r-- 1 banner banner 74 Aug 28 09:32 nautilus.txt.gpg
 ```
+
+We are done.
