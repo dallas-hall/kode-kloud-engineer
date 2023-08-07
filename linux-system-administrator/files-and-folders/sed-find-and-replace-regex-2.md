@@ -19,10 +19,9 @@
 # Connect to the first app server
 ssh clint@stbkp01
 
-# Get root
-sudo -i
+# Check current Linux version, it was CentOS Stream 8
+cat /etc/*rel*
 
-```bash
 # Get root
 sudo -i
 
@@ -31,7 +30,7 @@ cd /root
 cp -ar /root/nautilus.xml /root/nautilus.xml.bak
 
 # Replace 'String' with 'Torpedo'
-sed -i -r 's/String/Torpedo/g' /root/nautilus.xml
+sed -i -r 's/Random/Architecture/g' /root/nautilus.xml
 
 # Check changes.
 diff /root/nautilus.xml /root/nautilus.xml.bak
@@ -49,3 +48,5 @@ diff /root/nautilus.xml /root/nautilus.xml.bak
 # Delete the backup
 rm -rf /root/nautilus.xml.bak
 ```
+
+We are done.
