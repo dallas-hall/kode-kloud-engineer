@@ -19,8 +19,8 @@
 # Connect to application servers
 ssh tony@stapp01
 
-# Check current Linux version, it was CentOS 7.6
-cat /etc/*release*
+# Check current Linux version, it was CentOS Steam 8.
+cat /etc/*rel*
 
 # Switch to root
 sudo -i
@@ -41,33 +41,33 @@ systemctl list-units --type=target --all
 ```
 
 ```
-UNIT                   LOAD   ACTIVE   SUB    DESCRIPTION
-basic.target           loaded active   active Basic System
-cryptsetup.target      loaded active   active Local Encrypted Volumes
-emergency.target       loaded inactive dead   Emergency Mode
-final.target           loaded inactive dead   Final Step
-getty-pre.target       loaded inactive dead   Login Prompts (Pre)
-getty.target           loaded active   active Login Prompts
-graphical.target       loaded inactive dead   Graphical Interface
-local-fs-pre.target    loaded active   active Local File Systems (Pre)
-local-fs.target        loaded active   active Local File Systems
-multi-user.target      loaded active   active Multi-User System
-network-online.target  loaded active   active Network is Online
-network-pre.target     loaded inactive dead   Network (Pre)
-network.target         loaded active   active Network
-nss-user-lookup.target loaded inactive dead   User and Group Name Lookups
-paths.target           loaded active   active Paths
-remote-fs-pre.target   loaded inactive dead   Remote File Systems (Pre)
-remote-fs.target       loaded active   active Remote File Systems
-rescue.target          loaded inactive dead   Rescue Mode
-shutdown.target        loaded inactive dead   Shutdown
-slices.target          loaded active   active Slices
-sockets.target         loaded active   active Sockets
-swap.target            loaded active   active Swap
-sysinit.target         loaded active   active System Initialization
-time-sync.target       loaded inactive dead   System Time Synchronized
-timers.target          loaded active   active Timers
-umount.target          loaded inactive dead   Unmount All Filesystems
+  UNIT                   LOAD      ACTIVE   SUB    DESCRIPTION
+  basic.target           loaded    active   active Basic System
+● cryptsetup.target      not-found inactive dead   cryptsetup.target
+  emergency.target       loaded    inactive dead   Emergency Mode
+  getty-pre.target       loaded    inactive dead   Login Prompts (Pre)
+● getty.target           masked    inactive dead   getty.target
+  graphical.target       loaded    inactive dead   Graphical Interface
+  local-fs-pre.target    loaded    inactive dead   Local File Systems (Pre)
+  local-fs.target        loaded    active   active Local File Systems
+  multi-user.target      loaded    active   active Multi-User System
+  network-online.target  loaded    active   active Network is Online
+  network-pre.target     loaded    inactive dead   Network (Pre)
+  network.target         loaded    inactive dead   Network
+  nss-user-lookup.target loaded    inactive dead   User and Group Name Lookups
+  paths.target           loaded    active   active Paths
+  remote-fs-pre.target   loaded    inactive dead   Remote File Systems (Pre)
+  remote-fs.target       loaded    active   active Remote File Systems
+  rescue.target          loaded    inactive dead   Rescue Mode
+  shutdown.target        loaded    inactive dead   Shutdown
+  slices.target          loaded    active   active Slices
+  sockets.target         loaded    active   active Sockets
+  sshd-keygen.target     loaded    active   active sshd-keygen.target
+  swap.target            loaded    active   active Swap
+  sysinit.target         loaded    active   active System Initialization
+  time-sync.target       loaded    inactive dead   System Time Synchronized
+  timers.target          loaded    active   active Timers
+  umount.target          loaded    inactive dead   Unmount All Filesystems
 
 LOAD   = Reflects whether the unit definition was properly loaded.
 ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
@@ -83,8 +83,8 @@ systemctl set-default graphical.target
 ```
 
 ```
-Removed symlink /etc/systemd/system/default.target.
-Created symlink from /etc/systemd/system/default.target to /usr/lib/systemd/system/graphical.target.
+Removed /etc/systemd/system/default.target.
+Created symlink /etc/systemd/system/default.target → /usr/lib/systemd/system/graphical.target.
 ```
 
 ```bash
@@ -103,3 +103,5 @@ The above output means that a multi-user graphical mode is in use.
 ssh steve@stapp02
 ssh banner@stapp03
 ```
+
+We are done.
