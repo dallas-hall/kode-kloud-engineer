@@ -23,8 +23,8 @@ k get no -o wide
 ```
 
 ```
-NAME                      STATUS   ROLES                  AGE    VERSION                          INTERNAL-IP   EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION   CONTAINER-RUNTIME
-kodekloud-control-plane   Ready    control-plane,master   145m   v1.20.5-rc.0.18+c4af4684437b37   172.17.0.2    <none>        Ubuntu 20.10   5.4.0-1092-gcp   containerd://1.5.0-beta.0-69-gb3f240206
+NAME                      STATUS   ROLES           AGE   VERSION                     INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                                      KERNEL-VERSION   CONTAINER-RUNTIME
+kodekloud-control-plane   Ready    control-plane   44m   v1.27.3-44+b5c876a05b7bbd   172.17.0.2    <none>        Ubuntu Mantic Minotaur (development branch)   5.4.0-1106-gcp   containerd://1.7.1-2-g8f682ed69
 ```
 
 We can connect fine from Thor jumpbox.
@@ -40,7 +40,7 @@ deployment.apps/nginx created
 
 ```bash
 # Check it
-k describe deployments.apps
+k describe deploy
 ```
 
 <details>
@@ -49,11 +49,11 @@ k describe deployments.apps
 ```
 Name:                   nginx
 Namespace:              default
-CreationTimestamp:      Thu, 18 May 2023 09:41:33 +0000
+CreationTimestamp:      Sat, 19 Aug 2023 00:07:17 +0000
 Labels:                 app=nginx
 Annotations:            deployment.kubernetes.io/revision: 1
 Selector:               app=nginx
-Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+Replicas:               1 desired | 1 updated | 1 total | 0 available | 1 unavailable
 StrategyType:           RollingUpdate
 MinReadySeconds:        0
 RollingUpdateStrategy:  25% max unavailable, 25% max surge
@@ -70,52 +70,17 @@ Pod Template:
 Conditions:
   Type           Status  Reason
   ----           ------  ------
-  Available      True    MinimumReplicasAvailable
-  Progressing    True    NewReplicaSetAvailable
+  Available      False   MinimumReplicasUnavailable
+  Progressing    True    ReplicaSetUpdated
 OldReplicaSets:  <none>
-NewReplicaSet:   nginx-585449566 (1/1 replicas created)
+NewReplicaSet:   nginx-57d84f57dc (1/1 replicas created)
 Events:
   Type    Reason             Age   From                   Message
   ----    ------             ----  ----                   -------
-  Normal  ScalingReplicaSet  39s   deployment-controller  Scaled up replica set nginx-585449566 to 1
+  Normal  ScalingReplicaSet  5s    deployment-controller  Scaled up replica set nginx-57d84f57dc to 1
 ```
 
 </details>
-
-```bash
-# Create a ClusterIP for it
-k expose deployment nginx --port=80
-```
-
-```
-service/nginx exposed
-```
-
-```bash
-# Describe the ClusterIP.
-k describe svc nginx
-```
-
-<details>
-  <summary><b>NOTE:</b> Click me for output.</summary>
-
-```
-Name:              nginx
-Namespace:         default
-Labels:            app=nginx
-Annotations:       <none>
-Selector:          app=nginx
-Type:              ClusterIP
-IP:                10.96.194.223
-Port:              <unset>  80/TCP
-TargetPort:        80/TCP
-Endpoints:         10.244.0.7:80
-Session Affinity:  None
-Events:            <none>
-```
-
-</details>
-
 
 ```bash
 # View the Pod
@@ -126,5 +91,73 @@ k get po
 NAME                    READY   STATUS    RESTARTS   AGE
 nginx-585449566-q8qzn   1/1     Running   0          97s
 ```
+
+```bash
+# Create a ClusterIP for it
+k expose deployment nginx --port=80 --name=nginx-internal
+```
+
+```
+service/nginx-internal exposed
+```
+
+
+```bash
+# Create a NodePort for it
+k expose deployment nginx --type=NodePort --name=nginx-external
+```
+
+```
+service/nginx-external exposed
+```
+
+```bash
+# View the Services
+k get svc
+```
+
+```
+NAME             TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+kubernetes       ClusterIP   10.96.0.1       <none>        443/TCP        48m
+nginx            ClusterIP   10.96.140.227   <none>        80/TCP         3m25s
+nginx-external   NodePort    10.96.22.119    <none>        80:32594/TCP   3s
+thor@jump_host ~$ curl kodekloud-control-plane:32594
+```
+
+```bash
+# Test external connectivity
+curl kodekloud-control-plane:32594
+```
+
+<details>
+  <summary><b>NOTE:</b> Click me for output.</summary>
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+```
+
+</details>
 
 We are done.
