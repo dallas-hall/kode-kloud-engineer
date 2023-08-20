@@ -2,7 +2,7 @@
 
 ## Task
 
-> The system admin team of xFusionCorp Industries has noticed an issue with some servers in *Stratos Datacenter* where some of the servers are not in sync w.r.t time. Because of this, several application functionalities have been impacted. To fix this issue the team has started using common/standard NTP servers. They are finished with most of the servers except *App Server 1*. Therefore, perform the following tasks on this server:<br><br>Install and configure NTP server on *App Server 1*.<br><br>Add NTP server `1.sg.pool.ntp.org` in NTP configuration on *App Server 1*.<br><br>Please do not try to start/restart/stop ntp service, as we already have a restart for this service scheduled for tonight and we don't want these changes to be applied right now.
+> The system admin team of xFusionCorp Industries has noticed an issue with some servers in *Stratos Datacenter* where some of the servers are not in sync w.r.t time. Because of this, several application functionalities have been impacted. To fix this issue the team has started using common/standard NTP servers. They are finished with most of the servers except *App Server 2*. Therefore, perform the following tasks on this server:<br><br>Install and configure NTP server on *App Server 2*.<br><br>Add NTP server `server 1.my.pool.ntp.org` in NTP configuration on *App Server 2*.<br><br>Please do not try to start/restart/stop ntp service, as we already have a restart for this service scheduled for tonight and we don't want these changes to be applied right now.
 
 ## Preliminary Steps
 
@@ -17,47 +17,21 @@
 
 ```bash
 # Connect to the first app server
-ssh tony@stapp01
+ssh steve@stapp02
 
 # Get root
 sudo -i
 
-# Check Linux version
-cat /etc/*release*
-```
+# Check current Linux version, it was CentOS Stream 8
+cat /etc/*rel*
 
-```
-CentOS Linux release 7.6.1810 (Core)
-Derived from Red Hat Enterprise Linux 7.6 (Source)
-NAME="CentOS Linux"
-VERSION="7 (Core)"
-ID="centos"
-ID_LIKE="rhel fedora"
-VERSION_ID="7"
-PRETTY_NAME="CentOS Linux 7 (Core)"
-ANSI_COLOR="0;31"
-CPE_NAME="cpe:/o:centos:centos:7"
-HOME_URL="https://www.centos.org/"
-BUG_REPORT_URL="https://bugs.centos.org/"
-
-CENTOS_MANTISBT_PROJECT="CentOS-7"
-CENTOS_MANTISBT_PROJECT_VERSION="7"
-REDHAT_SUPPORT_PRODUCT="centos"
-REDHAT_SUPPORT_PRODUCT_VERSION="7"
-
-CentOS Linux release 7.6.1810 (Core)
-CentOS Linux release 7.6.1810 (Core)
-cpe:/o:centos:centos:7
-```
-
-```bash
 # Change current date and time settings
 timedatectl
 ```
 
 ```
-      Local time: Mon 2022-08-08 07:31:19 UTC
-  Universal time: Mon 2022-08-08 07:31:19 UTC
+      Local time: Sun 2023-08-20 05:45:51 UTC
+  Universal time: Sun 2023-08-20 05:45:51 UTC
         RTC time: n/a
        Time zone: UTC (UTC, +0000)
      NTP enabled: n/a
@@ -80,18 +54,25 @@ Complete!
 ```
 
 ```bash
-# Configure NTP
-vi /etc/ntp.conf
+# Create a backup
+cp -a /etc/ntp.conf /etc/ntp.conf.bak
+
+# Check current setting
+egrep '^server 1' /etc/ntp.conf
 ```
 
 ```
-...
-# Use public servers from the pool.ntp.org project.
-# Please consider joining the pool (http://www.pool.ntp.org/join.html).
-server 1.sg.pool.ntp.org
-server 0.centos.pool.ntp.org iburst
 server 1.centos.pool.ntp.org iburst
-server 2.centos.pool.ntp.org iburst
-server 3.centos.pool.ntp.org iburst
-...
 ```
+
+```bash
+# Configure NTP
+sed -i -r 's/^server 1.*/server 1.my.pool.ntp.org iburst/g' /etc/ntp.conf
+egrep '^server 1' /etc/ntp.conf
+```
+
+```
+server 1.my.pool.ntp.org iburst
+```
+
+We are done.
