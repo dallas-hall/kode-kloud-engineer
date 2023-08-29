@@ -11,8 +11,10 @@
 
 ## Research
 
-* How to configure MOTD in CentOS 7 - https://wiki.centos.org/TipsAndTricks/BannerFiles
-* Run sudo command via ssh - https://stackoverflow.com/a/10312700
+* How to configure MOTD in CentOS 7
+  * https://wiki.centos.org/TipsAndTricks/BannerFiles
+* Run sudo command via ssh
+  * https://stackoverflow.com/a/10312700
 
 ## Steps
 
@@ -23,66 +25,6 @@ Follow [Passwordless ssh setup](networking/passwordless-ssh-access.md) for every
 scp ~/nautilus_banner tony@stapp01:~
 scp ~/nautilus_banner steve@stapp02:~
 scp ~/nautilus_banner banner@stapp03:~
-```
-
-```
-nautilus_banner                                 100% 2530     7.3MB/s   00:00
-```
-
-```bash
-# Copy the files over to db server which failed as DB server didn't have scp
-scp ~/nautilus_banner peter@stdb01:~
-```
-
-```
-bash: scp: command not found
-lost connection
-```
-
-```bash
-# Connect to DB server
-ssh peter@stdb01
-
-# Find which package install scp
-yum provides scp
-```
-
-```
-...
-openssh-clients-7.4p1-21.el7.x86_64 : An open source SSH client applications
-Repo        : base
-Matched from:
-Filename    : /usr/bin/scp
-
-openssh-clients-7.4p1-22.el7_9.x86_64 : An open source SSH client applications
-Repo        : updates
-Matched from:
-Filename    : /usr/bin/scp
-```
-
-```bash
-# Install scp into DB server
-yum install -y openssh-clients
-```
-
-```
-...
-Installed:
-  openssh-clients.x86_64 0:7.4p1-22.el7_9
-
-Dependency Installed:
-  libedit.x86_64 0:3.0-12.20121213cvs.el7
-
-Dependency Updated:
-  openssh.x86_64 0:7.4p1-22.el7_9      openssh-server.x86_64 0:7.4p1-22.el7_9
-```
-
-```bash
-# Log off sudo and DB server
-exit
-exit
-
-# Copy the files over to db server
 scp ~/nautilus_banner peter@stdb01:~
 ```
 
@@ -132,3 +74,5 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww        
 ################################################################################################
 Warning! All Nautilus systems are monitored and audited. Logoff immediately if you are not authorized!
 ```
+
+We are done.
