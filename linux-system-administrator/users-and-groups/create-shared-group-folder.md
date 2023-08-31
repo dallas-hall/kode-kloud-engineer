@@ -77,5 +77,6 @@ ls -Ahl /devops/test.txt
 
 ```
 -rw-r--r-- 1 root devops 0 Aug 31 07:55 /devops/test.txt```
+```
 
 Even though we created the file as the *root* user, the owning group is *devops*. We are done.
