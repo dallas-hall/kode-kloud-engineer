@@ -2,7 +2,13 @@
 
 ## Task
 
-> There is some data on Nautilus App Server 1 in Stratos DC. Data needs to be altered in several of the files. On Nautilus App Server 1, alter the `/home/BSD.txt` file as per details given below:<br><br>a. Delete all lines containing word *copyright* and save results in `/home/BSD_DELETE.txt` file. (Please be aware of case sensitivity)<br><br>b. Replace all occurrence of word *and* to *is* and save results in `/home/BSD_REPLACE.txt` file.<br><br>**Note:** Let's say you are asked to replace word *to* with *from*. In that case, make sure not to alter any words containing this string; for example up**to**, contribu**to**r etc.
+> There is some data on Nautilus App Server 1 in Stratos DC. Data needs to be altered in several of the files. On Nautilus App Server 1, alter the `/home/BSD.txt` file as per details given below:
+>
+> a. Delete all lines containing word *following* and save results in `/home/BSD_DELETE.txt` file. (Please be aware of case sensitivity)
+>
+> b. Replace all occurrence of word *and* to *is* and save results in `/home/BSD_REPLACE.txt` file.
+>
+> **Note:** Let's say you are asked to replace word *to* with *from*. In that case, make sure not to alter any words containing this string; for example up**to**, contribu**to**r etc.
 
 ## Preliminary Steps
 
@@ -23,151 +29,179 @@ ssh tony@stapp01
 # Get root
 sudo -i
 
+# Check current Linux version, it was CentOS Stream 8
+cat /etc/*rel*
+
 # Create a back up
 cd /home
 cp -ar BSD.txt BSD.txt.bak
 
-# Delete all lines containing the string 'copyright'
-sed -r '/copyright/d' BSD.txt > BSD_DELETE.txt
+# Delete all lines containing the string 'software'
+sed -r '/following/d' BSD.txt > BSD_DELETE.txt
 
 # Check changes.
 diff BSD.txt BSD_DELETE.txt
 ```
 
+<details>
+  <summary><b>NOTE:</b> Click me for output.</summary>
+
 ```
-< Copyright (c) <year>, <copyright holder>
-6d4
-< 1. Redistributions of source code must retain the above copyright
-8d5
-< 2. Redistributions in binary form must reproduce the above copyright
-29d25
-< Copyright (c) <year>, <copyright holder>
-34d29
-< 1. Redistributions of source code must retain the above copyright
-36d30
-< 2. Redistributions in binary form must reproduce the above copyright
-58d51
-< Copyright (c) <year>, <copyright holder>
-63d55
-< 1. Redistributions of source code must retain the above copyright
-65d56
-< 2. Redistributions in binary form must reproduce the above copyright
-87d77
-< Copyright (c) <year>, <copyright holder>
-92d81
-< 1. Redistributions of source code must retain the above copyright
-94d82
-< 2. Redistributions in binary form must reproduce the above copyright
-116d103
-< Copyright (c) <year>, <copyright holder>
-121d107
-< 1. Redistributions of source code must retain the above copyright
-123d108
-< 2. Redistributions in binary form must reproduce the above copyright
-144d128
-< Copyright (c) <year>, <copyright holder>
-149d132
-< 1. Redistributions of source code must retain the above copyright
-151d133
-< 2. Redistributions in binary form must reproduce the above copyright
+5d4
+< modification, are permitted provided that the following conditions are met:
+7d5
+<    notice, this list of conditions and the following disclaimer.
+9d6
+<    notice, this list of conditions and the following disclaimer in the
+12d8
+<    must display the following acknowledgement:
+33d28
+< modification, are permitted provided that the following conditions are met:
+35d29
+<    notice, this list of conditions and the following disclaimer.
+37d30
+<    notice, this list of conditions and the following disclaimer in the
+40d32
+<    must display the following acknowledgement:
+62d53
+< modification, are permitted provided that the following conditions are met:
+64d54
+<    notice, this list of conditions and the following disclaimer.
+66d55
+<    notice, this list of conditions and the following disclaimer in the
+69d57
+<    must display the following acknowledgement:
+91d78
+< modification, are permitted provided that the following conditions are met:
+93d79
+<    notice, this list of conditions and the following disclaimer.
+95d80
+<    notice, this list of conditions and the following disclaimer in the
+98d82
+<    must display the following acknowledgement:
+120d103
+< modification, are permitted provided that the following conditions are met:
+122d104
+<    notice, this list of conditions and the following disclaimer.
+124d105
+<    notice, this list of conditions and the following disclaimer in the
+127d107
+<    must display the following acknowledgement:
+148d127
+< modification, are permitted provided that the following conditions are met:
+150d128
+<    notice, this list of conditions and the following disclaimer.
+152d129
+<    notice, this list of conditions and the following disclaimer in the
+155d131
+<    must display the following acknowledgement:
 ```
 
+</details>
+
 ```bash
-# Replace 'and' to 'is
-sed -r 's/\band\b/is/g' BSD.txt > BSD_REPLACE.txt
+# Replace 'and' to 'their'
+sed -r 's/\bor\b/for/g' BSD.txt > BSD_REPLACE.txt
 
 # Check changes.
 diff BSD.txt BSD_REPLACE.txt
 ```
 
+<details>
+  <summary><b>NOTE:</b> Click me for output.</summary>
+
 ```
 4c4
 < Redistribution and use in source and binary forms, with or without
 ---
-> Redistribution is use in source is binary forms, with or without
-7c7
-<    notice, this list of conditions and the following disclaimer.
----
->    notice, this list of conditions is the following disclaimer.
-9,10c9,10
-<    notice, this list of conditions and the following disclaimer in the
+> Redistribution and use in source and binary forms, with for without
+10,11c10,11
 <    documentation and/or other materials provided with the distribution.
+< 3. All advertising materials mentioning features or use of this software
 ---
->    notice, this list of conditions is the following disclaimer in the
->    documentation is/or other materials provided with the distribution.
+>    documentation and/for other materials provided with the distribution.
+> 3. All advertising materials mentioning features for use of this software
+15c15
+<    names of its contributors may be used to endorse or promote products
+---
+>    names of its contributors may be used to endorse for promote products
 32c32
 < Redistribution and use in source and binary forms, with or without
 ---
-> Redistribution is use in source is binary forms, with or without
-35c35
-<    notice, this list of conditions and the following disclaimer.
----
->    notice, this list of conditions is the following disclaimer.
-37,38c37,38
-<    notice, this list of conditions and the following disclaimer in the
+> Redistribution and use in source and binary forms, with for without
+38,39c38,39
 <    documentation and/or other materials provided with the distribution.
+< 3. All advertising materials mentioning features or use of this software
 ---
->    notice, this list of conditions is the following disclaimer in the
->    documentation is/or other materials provided with the distribution.
+>    documentation and/for other materials provided with the distribution.
+> 3. All advertising materials mentioning features for use of this software
+43c43
+<    names of its contributors may be used to endorse or promote products
+---
+>    names of its contributors may be used to endorse for promote products
 61c61
 < Redistribution and use in source and binary forms, with or without
 ---
-> Redistribution is use in source is binary forms, with or without
-64c64
-<    notice, this list of conditions and the following disclaimer.
----
->    notice, this list of conditions is the following disclaimer.
-66,67c66,67
-<    notice, this list of conditions and the following disclaimer in the
+> Redistribution and use in source and binary forms, with for without
+67,68c67,68
 <    documentation and/or other materials provided with the distribution.
+< 3. All advertising materials mentioning features or use of this software
 ---
->    notice, this list of conditions is the following disclaimer in the
->    documentation is/or other materials provided with the distribution.
+>    documentation and/for other materials provided with the distribution.
+> 3. All advertising materials mentioning features for use of this software
+72c72
+<    names of its contributors may be used to endorse or promote products
+---
+>    names of its contributors may be used to endorse for promote products
 90c90
 < Redistribution and use in source and binary forms, with or without
 ---
-> Redistribution is use in source is binary forms, with or without
-93c93
-<    notice, this list of conditions and the following disclaimer.
----
->    notice, this list of conditions is the following disclaimer.
-95,96c95,96
-<    notice, this list of conditions and the following disclaimer in the
+> Redistribution and use in source and binary forms, with for without
+96,97c96,97
 <    documentation and/or other materials provided with the distribution.
+< 3. All advertising materials mentioning features or use of this software
 ---
->    notice, this list of conditions is the following disclaimer in the
->    documentation is/or other materials provided with the distribution.
+>    documentation and/for other materials provided with the distribution.
+> 3. All advertising materials mentioning features for use of this software
+101c101
+<    names of its contributors may be used to endorse or promote products
+---
+>    names of its contributors may be used to endorse for promote products
 119c119
 < Redistribution and use in source and binary forms, with or without
 ---
-> Redistribution is use in source is binary forms, with or without
-122c122
-<    notice, this list of conditions and the following disclaimer.
----
->    notice, this list of conditions is the following disclaimer.
-124,125c124,125
-<    notice, this list of conditions and the following disclaimer in the
+> Redistribution and use in source and binary forms, with for without
+125,126c125,126
 <    documentation and/or other materials provided with the distribution.
+< 3. All advertising materials mentioning features or use of this software
 ---
->    notice, this list of conditions is the following disclaimer in the
->    documentation is/or other materials provided with the distribution.
+>    documentation and/for other materials provided with the distribution.
+> 3. All advertising materials mentioning features for use of this software
+130c130
+<    names of its contributors may be used to endorse or promote products
+---
+>    names of its contributors may be used to endorse for promote products
 147c147
 < Redistribution and use in source and binary forms, with or without
 ---
-> Redistribution is use in source is binary forms, with or without
-150c150
-<    notice, this list of conditions and the following disclaimer.
----
->    notice, this list of conditions is the following disclaimer.
-152,153c152,153
-<    notice, this list of conditions and the following disclaimer in the
+> Redistribution and use in source and binary forms, with for without
+153,154c153,154
 <    documentation and/or other materials provided with the distribution.
+< 3. All advertising materials mentioning features or use of this software
 ---
->    notice, this list of conditions is the following disclaimer in the
->    documentation is/or other materials provided with the distribution.
+>    documentation and/for other materials provided with the distribution.
+> 3. All advertising materials mentioning features for use of this software
+158c158
+<    names of its contributors may be used to endorse or promote products
+---
+>    names of its contributors may be used to endorse for promote products
 ```
+
+</details>
 
 ```bash
 # Delete the backup
 rm -rf /home/BSD.txt.bak
 ```
+
+We are done.
