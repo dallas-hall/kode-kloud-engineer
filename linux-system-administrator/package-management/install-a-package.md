@@ -1,8 +1,8 @@
-# Local Yum Repository
+# Install A Package
 
 ## Task
 
-> As per new application requirements shared by the Nautilus project development team, serveral new packages need to be installed on all app servers in Stratos Datacenter. Most of them are completed except for `wget`.<br><br>Therefore, install the `wget` package on all app-servers.
+> As per new application requirements shared by the Nautilus project development team, serveral new packages need to be installed on all app servers in Stratos Datacenter. Most of them are completed except for `git`.<br><br>Therefore, install the `git` package on all app-servers.
 
 ## Preliminary Steps
 
@@ -21,20 +21,21 @@ Follow [Passwordless ssh setup](networking/passwordless-ssh-access.md) for every
 # Connect to the first app server
 ssh tony@stapp01
 
-# Check current Linux version, it was CentOS 7.6
-cat /etc/*release*
+# Check current Linux version, it was CentOS Stream 8
+cat /etc/*rel*
 
 # Switch to root
 sudo -i
 
 # Install package
-yum install -y wget
+dnf install -y git
 ```
 
 ```
 ...
 Installed:
-  wget.x86_64 0:1.14-18.el7_6.1
+  emacs-filesystem-1:26.1-11.el8.noarch                                         git-2.39.3-1.el8_8.x86_64
+  git-core-2.39.3-1.el8_8.x86_64                                                git-core-doc-2.39.3-1.el8_8.noarch
 ...
 ```
 
@@ -43,3 +44,5 @@ Installed:
 ssh steve@stapp02
 ssh banner@stapp03
 ```
+
+We are done.
