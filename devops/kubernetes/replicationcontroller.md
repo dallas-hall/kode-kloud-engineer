@@ -2,7 +2,13 @@
 
 ## Task
 
-> The Nautilus DevOps team wants to create a ReplicationController to deploy several pods. They are going to deploy applications on these pods, these applications need highly available infrastructure. Below you can find exact details, create the ReplicationController accordingly.<br><br>Create a ReplicationController using nginx image, preferably with latest tag, and name it as `nginx-replicationcontroller`.<br>Labels `app` should be `nginx_app`, and labels `type` should be `front-end`. The container should be named as `nginx-container` and also make sure replica counts are 3.<br>All pods should be running state after deployment.
+> The Nautilus DevOps team wants to create a ReplicationController to deploy several pods. They are going to deploy applications on these pods, these applications need highly available infrastructure. Below you can find exact details, create the ReplicationController accordingly.
+>
+> Create a ReplicationController using `httpd` image, preferably with `latest` tag, and name it as `httpd-replicationcontroller`.
+>
+> Labels `app` should be `httpd_app`, and labels `type` should be `front-end`. The container should be named as `httpd-container` and also make sure replica counts are 3.
+>
+> All pods should be running state after deployment.
 
 
 ## Preliminary Steps
@@ -12,7 +18,7 @@
 
 ## Research
 
-* ReplicationControllers.\
+* ReplicationControllers.
   * https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/
 
 ## Steps
@@ -25,8 +31,8 @@ k get no -o wide
 ```
 
 ```
-NAME                      STATUS   ROLES                  AGE    VERSION                          INTERNAL-IP   EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION   CONTAINER-RUNTIME
-kodekloud-control-plane   Ready    control-plane,master   113m   v1.20.5-rc.0.18+c4af4684437b37   172.17.0.2    <none>        Ubuntu 20.10   5.4.0-1093-gcp   containerd://1.5.0-beta.0-69-gb3f240206
+NAME                      STATUS   ROLES           AGE   VERSION                     INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                                      KERNEL-VERSION   CONTAINER-RUNTIME
+kodekloud-control-plane   Ready    control-plane   14m   v1.27.3-44+b5c876a05b7bbd   172.17.0.2    <none>        Ubuntu Mantic Minotaur (development branch)   5.4.0-1106-gcp   containerd://1.7.1-2-g8f682ed69
 ```
 
 We can connect fine from Thor jumpbox.
@@ -40,22 +46,22 @@ cat > rc.yml
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: nginx-replicationcontroller
+  name: httpd-replicationcontroller
 spec:
   replicas: 3
   selector:
-    app: nginx_app
+    app: httpd_app
     type: front-end
   template:
     metadata:
-      name: nginx
+      name: httpd
       labels:
-        app: nginx
+        app: httpd_app
         type: front-end
     spec:
       containers:
-      - name: nginx-container
-        image: nginx
+      - name: httpd-container
+        image: httpd:latest
         ports:
         - containerPort: 80
 ```
@@ -69,17 +75,50 @@ k apply -f rc.yaml
 ```
 
 ```
-replicationcontroller/nginx-replicationcontroller created
+replicationcontroller/httpd-replicationcontroller created
 ```
 
 ```bash
 # View the RC object
-k get replicationcontrollers
+k get rc
 ```
 
 ```
 NAME                          DESIRED   CURRENT   READY   AGE
-nginx-replicationcontroller   3         3         3       16s
+httpd-replicationcontroller   3         3         3       12s
+```
+
+```bash
+# Test the RC.
+k expose rc httpd-replicationcontroller --type=NodePort --port=80
+```
+
+```
+service/httpd-replicationcontroller exposed
+```
+
+```bash
+# Get the port for testing.
+k get svc
+```
+
+```
+NAME                          TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)        AGE
+httpd-replicationcontroller   NodePort    10.96.3.215   <none>        80:32498/TCP   3s
+kubernetes                    ClusterIP   10.96.0.1     <none>        443/TCP        18m
+```
+
+```bash
+# Run the test.
+curl kodekloud-control-plane:32498
+```
+
+```html
+<html>
+  <body>
+    <h1>It works!</h1>
+  </body>
+</html>
 ```
 
 We are done.
