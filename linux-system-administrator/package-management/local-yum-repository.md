@@ -2,7 +2,13 @@
 
 ## Task
 
-> The Nautilus production support team and security team had a meeting last month in which they decided to use local `yum` repositories for maintaing packages needed for their servers. For now they have decided to configure a local `yum` repo on Nautilus Backup Server. This is one of the pending items from last month, so please configure a local yum repository on Nautilus Backup Server as per details given below.<br><br>a. We have some packages already present at location `/packages/downloaded_rpms/` on Nautilus Backup Server.<br><br>b. Create a `yum` repo named *localyum* and make sure to set Repository ID to *localyum*. Configure it to use package's location `/packages/downloaded_rpms/`.<br><br>c. Install package `wget` from this newly created repo.
+> The Nautilus production support team and security team had a meeting last month in which they decided to use local yum repositories for maintaing packages needed for their servers. For now they have decided to configure a local yum repo on Nautilus Backup Server. This is one of the pending items from last month, so please configure a local yum repository on Nautilus Backup Server as per details given below.
+>
+> a. We have some packages already present at location `/packages/downloaded_rpms/` on Nautilus Backup Server.
+>
+> b. Create a yum repo named `epel_local` and make sure to set Repository ID to `epel_local`. Configure it to use package's location `/packages/downloaded_rpms/`.
+>
+> c. Install package `vim-enhanced` from this newly created repo.
 
 ## Preliminary Steps
 
@@ -11,27 +17,28 @@
 
 ## Research
 
-* How to configure local yum repo - https://www.thegeekdiary.com/how-to-create-yum-repository-in-centos-rhel/
+* How to configure local yum repo.
+  * https://www.thegeekdiary.com/how-to-create-yum-repository-in-centos-rhel/
 
 ## Steps
 
 ```bash
-# Connect to application servers
+# Connect to backup server.
 ssh clint@stbkp01
 
-# Check current Linux version, it was CentOS 7.6
-cat /etc/*release*
+# Check current Linux version, it was CentOS Stream 8
+cat /etc/*rel*
 
 # Switch to root
 sudo -i
 
 # Create the local repo file
-cat > /etc/yum.repos.d/localyum.repo
+cat > /etc/yum.repos.d/epel_local.repo
 ```
 
 ```
-[localyum]
-name=localyum
+[epel_local]
+name=epel_local
 baseurl=file:///packages/downloaded_rpms/
 enabled=1
 gpgcheck=0
@@ -41,13 +48,18 @@ Close the file with conttrol + d i.e. `^D`.
 
 ```bash
 # Install wget
-yum install -y wget
+dnf install -y vim-enhanced
 ```
 
 ```
 ...
 Installed:
-  wget.x86_64 0:1.14-18.el7_6.1
+  gpm-libs-1.20.7-17.el8.x86_64
+  vim-common-2:8.0.1763-19.el8.4.x86_64
+  vim-enhanced-2:8.0.1763-19.el8.4.x86_64
+  vim-filesystem-2:8.0.1763-19.el8.4.noarch
 
 Complete!
 ```
+
+We are done.
