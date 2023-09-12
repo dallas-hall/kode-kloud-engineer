@@ -2,7 +2,11 @@
 
 ## Task
 
-> As per details shared by the development team, the new application release has some dependencies on the back end. There are some packages/services that need to be installed on all app servers under Stratos Datacenter. As per requirements please perform the following steps:<br><br>a. Install `httpd` package on all the application servers.<br><br>b. Once installed, make sure it is enabled to start during boot.
+> As per details shared by the development team, the new application release has some dependencies on the back end. There are some packages/services that need to be installed on all app servers under Stratos Datacenter. As per requirements please perform the following steps:
+>
+> a. Install `cups` package on all the application servers.
+>
+> b. Once installed, make sure it is enabled to start during boot.
 
 ## Preliminary Steps
 
@@ -19,64 +23,37 @@ None.
 # Connect to application servers
 ssh tony@stapp01
 
-# Check current Linux version, it was CentOS 7.6
-cat /etc/*release*
+# Check current Linux version, it was CentOS Steam 8.
+cat /etc/*rel*
 
 # Switch to root
 sudo -i
 
 # Install package
-yum install -y httpd
+yum install -y cups
 ```
 
 ```
 ...
 Installed:
-  httpd.x86_64 0:2.4.6-97.el7.centos.5
+...
+  cups-1:2.2.6-53.el8.x86_64
 ...
 ```
 
 ```bash
-# Start and enable httpd
-systemctl start httpd
-systemctl enable httpd
-```
+# Start and enable cups
+systemctl enable --now cups
 
-```
-Created symlink from /etc/systemd/system/multi-user.target.wants/httpd.service to /usr/lib/systemd/system/httpd.service.
-```
-
-```bash
 # Check service status
-systemctl status httpd
+systemctl status cups
 ```
 
 ```
-● httpd.service - The Apache HTTP Server
-   Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
-   Active: active (running) since Mon 2022-08-29 10:14:21 UTC; 26s ago
-     Docs: man:httpd(8)
-           man:apachectl(8)
+● cups.service - CUPS Scheduler
+   Loaded: loaded (/usr/lib/systemd/system/cups.service; enabled; vendor preset: enabled)
+   Active: active (running) since Tue 2023-09-12 08:13:10 UTC; 25s ago
 ...
-```
-
-```bash
-# Create a test file
-cat > /var/www/html/index.html
-```
-Close the file with control + d, i.e. `^D`.
-
-```
-Hello world, from stapp01.
-```
-
-```bash
-# Check httpd server from thor jumpbox
-curl stapp01:80
-```
-
-```
-Hello world, from stapp01.
 ```
 
 ```bash
@@ -84,3 +61,5 @@ Hello world, from stapp01.
 ssh steve@stapp02
 ssh banner@stapp03
 ```
+
+We are done.
