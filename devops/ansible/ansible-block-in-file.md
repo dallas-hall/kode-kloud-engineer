@@ -2,7 +2,12 @@
 
 ## Task
 
-> The Nautilus DevOps team wants to install and set up a simple `httpd` web server on all app servers in Stratos DC. Additionally, they want to deploy a sample web page for now using Ansible only. Therefore, write the required playbook to complete this task. Find more details about the task below.<br><br>We already have an `inventory` file under `/home/thor/ansible directory` on jump host. Create a `playbook.yml` under `/home/thor/ansible directory` on jump host itself.<br>Using the playbook, install `httpd` web server on all app servers. Additionally, make sure its service should up and running.<br>Using blockinfile Ansible module add some content in `/var/www/html/index.html` file. Below is the content:
+> The Nautilus DevOps team wants to install and set up a simple httpd web server on all app servers in Stratos DC. Additionally, they want to deploy a sample web page for now using Ansible only. Therefore, write the required playbook to complete this task. Find more details about the task below.
+>
+> We already have an `inventory` file under `/home/thor/ansible` directory on jump host. Create a `playbook.yml` under `/home/thor/ansible` directory on jump host itself.
+>
+> 1. Using the `playbook`, install `httpd` web server on all app servers. Additionally, make sure its service should up and running.
+> 2. Using `blockinfile` Ansible module add some content in `/var/www/html/index.html` file. Below is the content:
 
 ```
 Welcome to XfusionCorp!
@@ -11,8 +16,8 @@ This is Nautilus sample file, created using Ansible!
 
 Please do not modify this file manually!
 ```
-
-> The `/var/www/html/index.html` file's user and group owner should be `apache` on all app servers.<br>The `/var/www/html/index.html` file's permissions should be `0777` on all app servers.<br>Note:<br><br>i. Validation will try to run the playbook using command ansible-playbook -i inventory playbook.yml so please make sure the playbook works this way without passing any extra arguments.<br>ii. Do not use any custom or empty marker for blockinfile module.
+> 3. The `/var/www/html/index.html` file's user and group owner should be `apache` on all app servers.
+> 4. The `/var/www/html/index.html` file's permissions should be `0755` on all app servers.
 
 ## Preliminary Steps
 
@@ -25,6 +30,10 @@ Please do not modify this file manually!
   * https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html
 * Block in file.
   * https://docs.ansible.com/ansible/latest/collections/ansible/builtin/blockinfile_module.html
+* YAML block chomping.
+  * https://yaml-multiline.info/
+
+
 ## Steps
 
 Follow [Passwordless ssh setup](../../linux-system-administrator/networking/passwordless-ssh-access.md) for every user.
@@ -35,12 +44,15 @@ ansible --version
 ```
 
 ```
-ansible 2.9.9
+ansible [core 2.15.0]
   config file = /etc/ansible/ansible.cfg
-  configured module search path = [u'/root/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
-  ansible python module location = /usr/lib/python2.7/site-packages/ansible
-  executable location = /bin/ansible
-  python version = 2.7.5 (default, Jun 20 2019, 20:27:34) [GCC 4.8.5 20150623 (Red Hat 4.8.5-36)]
+  configured module search path = ['/home/thor/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3.11/site-packages/ansible
+  ansible collection location = /home/thor/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/bin/ansible
+  python version = 3.11.4 (main, Jun 29 2023, 13:19:58) [GCC 8.5.0 20210514 (Red Hat 8.5.0-20)] (/usr/bin/python3.11)
+  jinja version = 3.1.2
+  libyaml = True
 ```
 
 ```bash
@@ -67,7 +79,6 @@ cat > playbook.yml
   become: yes
   tasks:
     - name: Install httpd
-      # https://docs.ansible.com/ansible/latest/modules/package_module.html
       package:
         name: httpd
         state: present
@@ -82,7 +93,7 @@ cat > playbook.yml
         path: /var/www/html/index.html
         owner: apache
         group: apache
-        mode: '0777'
+        mode: '0755'
         state: touch
 
     - name : Add content to index.html
@@ -105,7 +116,7 @@ ansible-playbook -i inventory playbook.yml
 
 ```
 ...
-PLAY RECAP ***********************************************************************
+PLAY RECAP *************************************************************************************************************************************
 stapp01                    : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 stapp02                    : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 stapp03                    : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
@@ -117,21 +128,18 @@ ansible -i inventory all -m shell -a 'systemctl status httpd'
 ```
 
 ```
-...
-stapp02 | CHANGED | rc=0 >>
-● httpd.service - The Apache HTTP Server
-   Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled; vendor preset: disabled)
-   Active: active (running) since Thu 2023-01-19 22:43:54 UTC; 1min 19s ago
-...
 stapp03 | CHANGED | rc=0 >>
 ● httpd.service - The Apache HTTP Server
    Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled; vendor preset: disabled)
-   Active: active (running) since Thu 2023-01-19 22:43:54 UTC; 1min 19s ago
+   Active: active (running) since Mon 2023-09-18 05:58:06 UTC; 19s ago
 ...
-stapp01 | CHANGED | rc=0 >>
 ● httpd.service - The Apache HTTP Server
    Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled; vendor preset: disabled)
-   Active: active (running) since Thu 2023-01-19 22:43:54 UTC; 1min 19s ago
+   Active: active (running) since Mon 2023-09-18 05:58:06 UTC; 18s ago
+...
+● httpd.service - The Apache HTTP Server
+   Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled; vendor preset: disabled)
+   Active: active (running) since Mon 2023-09-18 05:58:06 UTC; 19s ago
 ...
 ```
 
@@ -145,13 +153,13 @@ ansible -i inventory all -m shell -a 'ls -Ahl /var/www/html'
 ```
 stapp01 | CHANGED | rc=0 >>
 total 4.0K
--rwxrwxrwx 1 apache apache 177 Jan 19 22:43 index.html
+-rwxr-xr-x 1 apache apache 178 Sep 18 05:58 index.html
 stapp02 | CHANGED | rc=0 >>
 total 4.0K
--rwxrwxrwx 1 apache apache 177 Jan 19 22:43 index.html
+-rwxr-xr-x 1 apache apache 178 Sep 18 05:58 index.html
 stapp03 | CHANGED | rc=0 >>
 total 4.0K
--rwxrwxrwx 1 apache apache 177 Jan 19 22:43 index.html
+-rwxr-xr-x 1 apache apache 178 Sep 18 05:58 index.html
 ```
 
 Permissions are correct.
