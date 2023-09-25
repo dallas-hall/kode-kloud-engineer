@@ -2,7 +2,10 @@
 
 ## Task
 
-> The Nautilus development team shared with the DevOps team requirements for new application development, setting up a Git repository for that project. Create a Git repository on Storage server in Stratos DC as per details given below:<br><br>Install git package using `yum` on Storage server.<br>After that create/init a git repository `/opt/cluster.git` (use the exact name as asked and make sure not to create a bare repository).
+> The Nautilus development team shared with the DevOps team requirements for new application development, setting up a Git repository for that project. Create a Git repository on Storage server in Stratos DC as per details given below:
+>
+>* Install git package using `yum` on Storage server.
+>* After that create/init a git repository `/opt/blog.git` (use the exact name as asked and make sure not to create a bare repository).
 
 ## Preliminary Steps
 
@@ -11,7 +14,8 @@
 
 ## Research
 
-None
+* Bare repository.
+  * https://stackoverflow.com/questions/37992400/what-is-a-bare-repository-and-why-would-i-need-one
 
 ## Steps
 
@@ -20,7 +24,7 @@ None
 ssh natasha@ststor01
 
 # Check current Linux version, it was CentOS Stream 8
-cat /etc/*release*
+cat /etc/*rel*
 
 # Switch to root.
 sudo -i
@@ -38,11 +42,12 @@ Installed:
 
 ```
 # Create the repo
-git init --bare  /opt/cluster.git
+git init --bare /opt/blog.git
 ```
 
 ```
-Initialized empty Git repository in /opt/cluster.git/.git/
+...
+Initialized empty Git repository in /opt/blog.git/.git/
 ```
 
 We are done.
