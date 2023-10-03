@@ -2,7 +2,11 @@
 
 ## Task
 
-> We have some users on all app servers in Stratos Datacenter. Some of them have been assigned some new roles and responsibilities, therefore their users need to be upgraded with sudo access so that they can perform admin level tasks.<br><br>a. Provide `sudo` access to user `yousuf` on all app servers.<br><br>b. Make sure you have set up password-less sudo for the user.
+> We have some users on all app servers in Stratos Datacenter. Some of them have been assigned some new roles and responsibilities, therefore their users need to be upgraded with sudo access so that they can perform admin level tasks.
+>
+> a. Provide `sudo` access to user `ravi` on all app servers.
+>
+> Make sure you have set up password-less sudo for the user.
 
 ## Preliminary Steps
 
@@ -11,25 +15,26 @@
 
 ## Research
 
-* https://www.howtogeek.com/50787/add-a-user-to-a-group-or-second-group-on-linux/
-* https://www.cyberciti.biz/faq/linux-unix-running-sudo-command-without-a-password/
-* https://superuser.com/questions/869144/why-does-the-system-have-etc-sudoers-d-how-should-i-edit-it
+* Add user to a group
+  * https://www.howtogeek.com/50787/add-a-user-to-a-group-or-second-group-on-linux/
+* Passwordless sudo
+  * https://www.cyberciti.biz/faq/linux-unix-running-sudo-command-without-a-password/
+  * https://superuser.com/questions/869144/why-does-the-system-have-etc-sudoers-d-how-should-i-edit-it
 
 ## Steps
-
 
 ```bash
 # Connect to application servers
 ssh tony@stapp01
 
-# Check current Linux version, it was CentOS 7.6
-cat /etc/*release*
+# Check current Linux version, it was CentOS Stream 8
+cat /etc/*rel*
 
 # Switch to root
 sudo -i
 
 # Check if the user has sudo access via the group wheel
-grep wheel /etc/passwd
+grep wheel /etc/group
 ```
 
 ```
@@ -38,7 +43,7 @@ wheel:x:10:ansible,tony
 
 ```bash
 # Add user to group wheel for sudo access
-usermod -aG wheel yousuf
+usermod -aG wheel ravi
 
 # Edit the sudoers file to grant passwordless sudo
 visudo
@@ -48,19 +53,21 @@ You could also use the `/etc/sudoers.d/` way as well.
 
 ```
 ...
-yousuf     ALL=(ALL)   NOPASSWD:ALL
+ravi     ALL=(ALL)   NOPASSWD:ALL
 ```
+
+Close and save the file with `:x`
 
 ```bash
 # Switch to the user
-sudo -iu yousuf
+sudo -iu ravi
 
 # Check passwordless sudo
-sudo cat /etc/shadow
+sudo head -n 1 /etc/shadow
 ```
 
 ```
-root:$6$yvQguCkpRVq/Es1U$zOmQcKk9aXPqwB3Pu8PviJ7cqcKqmp70Gdkr074iSglTM/d01UI9lS.d1T51C7b.adMdA6ihz8hKwl3WM9rSB/:18184:0:99999:7:::
+root:$6$jQ/8ISYU9MlFxz$XC0PrSuMHsYD9wnvh90UQza.fOo3hy6NqWxac2dqsWIoYRuuZ/.7HKLiDE.SiPbH7oGtInf6wVyzd6OYJ8Isd0:19422:0:99999:7:::
 ...
 ```
 
@@ -69,3 +76,5 @@ root:$6$yvQguCkpRVq/Es1U$zOmQcKk9aXPqwB3Pu8PviJ7cqcKqmp70Gdkr074iSglTM/d01UI9lS.
 ssh steve@stapp02
 ssh banner@stapp03
 ```
+
+We are done.
