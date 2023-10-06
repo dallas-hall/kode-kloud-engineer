@@ -1,8 +1,8 @@
-# Install SELinux
+# Troubleshooting MariaDB
 
 ## Task
 
-> There is a critical issue going on with the Nautilus application in Stratos DC. The production support team identified that the application is unable to connect to the database. After digging into the issue, the team found that mariadb service is down on the database server.<br><br>Look into the issue and fix it.
+> There is a critical issue going on with the Nautilus application in Stratos DC. The production support team identified that the application is unable to connect to the database. After digging into the issue, the team found that mariadb service is down on the database server.Look into the issue and fix it.
 
 ## Preliminary Steps
 
@@ -16,51 +16,52 @@
 ## Steps
 
 ```bash
-# Connect to the first app server
+# Connect to the database server
 ssh peter@stdb01
 
-# Get root
+# Switch to root
 sudo -i
 
-# Check Linux version
-cat /etc/*release*
-```
+# Check current Linux version, it was CentOS Steam 8
+cat /etc/*rel*
 
-```
-CentOS Linux release 7.6.1810 (Core)
-Derived from Red Hat Enterprise Linux 7.6 (Source)
-NAME="CentOS Linux"
-VERSION="7 (Core)"
-ID="centos"
-ID_LIKE="rhel fedora"
-VERSION_ID="7"
-PRETTY_NAME="CentOS Linux 7 (Core)"
-ANSI_COLOR="0;31"
-CPE_NAME="cpe:/o:centos:centos:7"
-HOME_URL="https://www.centos.org/"
-BUG_REPORT_URL="https://bugs.centos.org/"
-
-CENTOS_MANTISBT_PROJECT="CentOS-7"
-CENTOS_MANTISBT_PROJECT_VERSION="7"
-REDHAT_SUPPORT_PRODUCT="centos"
-REDHAT_SUPPORT_PRODUCT_VERSION="7"
-
-CentOS Linux release 7.6.1810 (Core)
-CentOS Linux release 7.6.1810 (Core)
-cpe:/o:centos:centos:7
-```
-
-```bash
 # Check the mariadb service
 systemctl status mariadb
 ```
 
+<details>
+  <summary><b>NOTE:</b> Click me for output.</summary>
+
 ```
-● mariadb.service - MariaDB database server
-   Loaded: loaded (/usr/lib/systemd/system/mariadb.service; disabled; vendor preset: disabled)
-   Active: inactive (dead)
-Aug 10 09:42:35 stdb01.stratos.xfusioncorp.com systemd[1]: Collecting mariadb.service
+● mariadb.service - MariaDB 10.3 database server
+   Loaded: loaded (/usr/lib/systemd/system/mariadb.service; enabled; vendor preset: disabled)
+   Active: inactive (dead) since Fri 2023-10-06 07:53:56 UTC; 1min 42s ago
+     Docs: man:mysqld(8)
+           https://mariadb.com/kb/en/library/systemd/
+  Process: 775 ExecStartPost=/usr/libexec/mysql-check-upgrade (code=exited, status=0/SUCCESS)
+  Process: 732 ExecStart=/usr/libexec/mysqld --basedir=/usr $MYSQLD_OPTS $_WSREP_NEW_CLUSTER (code=exited, status=0/SUCCESS)
+  Process: 567 ExecStartPre=/usr/libexec/mysql-prepare-db-dir mariadb.service (code=exited, status=0/SUCCESS)
+  Process: 487 ExecStartPre=/usr/libexec/mysql-check-socket (code=exited, status=0/SUCCESS)
+ Main PID: 732 (code=exited, status=0/SUCCESS)
+   Status: "MariaDB server is down"
+
+Oct 06 07:53:55 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Got notification message from PID 732 (STATUS=ensuring dirty
+ buffer pool are written to log, EXTEND_TIMEOUT_USEC=30000000)
+Oct 06 07:53:55 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Got notification message from PID 732 (STATUS=Free innodb bu
+ffer pool, EXTEND_TIMEOUT_USEC=30000000)
+Oct 06 07:53:56 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Got notification message from PID 732 (STATUS=MariaDB server
+ is down)
+Oct 06 07:53:56 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Got notification message from PID 732 (STATUS=MariaDB server
+ is down)
+Oct 06 07:53:56 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Child 732 belongs to mariadb.service.
+Oct 06 07:53:56 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Main process exited, code=exited, status=0/SUCCESS
+Oct 06 07:53:56 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Succeeded.
+Oct 06 07:53:56 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Changed stop-sigterm -> dead
+Oct 06 07:53:56 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Job mariadb.service/stop finished, result=done
+Oct 06 07:53:56 stdb01.stratos.xfusioncorp.com systemd[1]: Stopped MariaDB 10.3 database server.
 ```
+
+</details>
 
 ```bash
 # Try to start the mariadb service
@@ -68,7 +69,8 @@ systemctl start mariadb
 ```
 
 ```
-Job for mariadb.service failed because the control process exited with error code. See "systemctl status mariadb.service" and "journalctl -xe" for details.
+Job for mariadb.service failed because the control process exited with error code.
+See "systemctl status mariadb.service" and "journalctl -xe" for details.
 ```
 
 ```bash
@@ -78,9 +80,11 @@ journalctl -u mariadb.service
 
 ```
 ...
-Aug 10 09:42:44 stdb01.stratos.xfusioncorp.com mysqld_safe[707]: 220810 09:42:44 mysqld_safe Logging to '/var/log/mariadb/mariadb.log'
+Oct 06 07:55:59 stdb01.stratos.xfusioncorp.com systemd[1018]: PR_SET_MM_ARG_START failed, proceeding without: Operation not permitted
 ...
 ```
+
+Is an interesting line, lets check the app logs.
 
 ```bash
 # Check the mariadb app logs found in the journal logs
@@ -89,58 +93,71 @@ cat /var/log/mariadb/mariadb.log
 
 ```
 ...
-220810  9:42:46 [ERROR] mysqld: Can't create/write to file '/var/run/mariadb/mariadb.pid' (Errcode: 13)
-220810  9:42:46 [ERROR] Can't start server: can't create PID file: Permission denied
-220810 09:42:46 mysqld_safe mysqld from pid file /var/run/mariadb/mariadb.pid ended
+d on IP: '::'.
+2023-10-06  7:55:59 0 [ERROR] mysqld: Can't create/write to file '/run/mariadb/mariadb.pid'
 ...
 ```
 
 ```bash
 # Check the permission denied error on the file
-ls -Ahl /var/run/mariadb/mariadb.pid
+ls -Ahl /run/mariadb/mariadb.pid
 ```
 
 ```
-ls: cannot access /var/run/mariadb/mariadb.pid: No such file or directory
+ls: cannot access '/run/mariadb/mariadb.pid': No such file or directory
 ```
 
 ```bash
 # Check the permission denied error on the folder
-ls -Adhl /var/run/mariadb/
+ls -Adhl /run/mariadb/
 ```
 
 ```
-drwxr-xr-x 2 root mysql 40 Aug 10 09:40 /var/run/mariadb/
+drwxr-xr-x 2 root mysql 40 Oct  6 07:53 /run/mariadb/
 ```
 
 ```bash
 # Fix the folder owner, could also have changed the permissions for the group.
-chown mysql: /var/run/mariadb/
+chown mysql: /run/mariadb/
 
 # Start the mariadb service & check it
 systemctl start mariadb
 systemctl status mariadb
 ```
 
-```
-● mariadb.service - MariaDB database server
-   Loaded: loaded (/usr/lib/systemd/system/mariadb.service; disabled; vendor preset: disabled)
-   Active: active (running) since Wed 2022-08-10 09:50:33 UTC; 11s ago
-  Process: 1008 ExecStartPost=/usr/libexec/mariadb-wait-ready $MAINPID (code=exited, status=0/SUCCESS)
-  Process: 973 ExecStartPre=/usr/libexec/mariadb-prepare-db-dir %n (code=exited, status=0/SUCCESS)
- Main PID: 1007 (mysqld_safe)
-   CGroup: /docker/f3b03bb3a5d7f51f7fd7ef6a14515df166c3b8faf2368953a401902fc169ec9f/system.slice/mariadb.service
-           ├─1007 /bin/sh /usr/bin/mysqld_safe --basedir=/usr
-           └─1171 /usr/libexec/mysqld --basedir=/usr --datadir=/var/lib/mysql --plugin-dir=/usr/lib64/mysql/plugin --log-error=/var/log/mariadb/mariadb.log --pid-file=/...
+<details>
+  <summary><b>NOTE:</b> Click me for output.</summary>
 
-Aug 10 09:50:31 stdb01.stratos.xfusioncorp.com systemd[1007]: Executing: /usr/bin/mysqld_safe --basedir=/usr
-Aug 10 09:50:31 stdb01.stratos.xfusioncorp.com systemd[1008]: Executing: /usr/libexec/mariadb-wait-ready 1007
-Aug 10 09:50:31 stdb01.stratos.xfusioncorp.com mysqld_safe[1007]: 220810 09:50:31 mysqld_safe Logging to '/var/log/mariadb/mariadb.log'.
-Aug 10 09:50:31 stdb01.stratos.xfusioncorp.com mysqld_safe[1007]: 220810 09:50:31 mysqld_safe Starting mysqld daemon with databases from /var/lib/mysql
-Aug 10 09:50:33 stdb01.stratos.xfusioncorp.com systemd[1]: Child 1008 belongs to mariadb.service
-Aug 10 09:50:33 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: control process exited, code=exited status=0
-Aug 10 09:50:33 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service got final SIGCHLD for state start-post
-Aug 10 09:50:33 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service changed start-post -> running
-Aug 10 09:50:33 stdb01.stratos.xfusioncorp.com systemd[1]: Job mariadb.service/start finished, result=done
-Aug 10 09:50:33 stdb01.stratos.xfusioncorp.com systemd[1]: Started MariaDB database server.
 ```
+● mariadb.service - MariaDB 10.3 database server
+   Loaded: loaded (/usr/lib/systemd/system/mariadb.service; enabled; vendor preset: disabled)
+   Active: active (running) since Fri 2023-10-06 08:02:24 UTC; 19s ago
+     Docs: man:mysqld(8)
+           https://mariadb.com/kb/en/library/systemd/
+  Process: 1382 ExecStartPost=/usr/libexec/mysql-check-upgrade (code=exited, status=0/SUCCESS)
+  Process: 1277 ExecStartPre=/usr/libexec/mysql-prepare-db-dir mariadb.service (code=exited, status=0/SUCCESS)
+  Process: 1231 ExecStartPre=/usr/libexec/mysql-check-socket (code=exited, status=0/SUCCESS)
+ Main PID: 1339 (mysqld)
+   Status: "Taking your SQL requests now..."
+    Tasks: 30 (limit: 1340692)
+   Memory: 79.6M
+   CGroup: /docker/4b0be86d16a41421a216f7707b2df9634df404774cefd37b056e16eb12f76828/system.slice/mariadb.service
+           └─1339 /usr/libexec/mysqld --basedir=/usr
+
+Oct 06 08:02:24 stdb01.stratos.xfusioncorp.com systemd[1382]: Applying namespace mount on /run/systemd/unit-root/var/tmp
+Oct 06 08:02:24 stdb01.stratos.xfusioncorp.com systemd[1382]: Successfully mounted /var/tmp/systemd-private-de5c20b73d1944f0b6f500b1f955
+3652-mariadb.service-zpcC8z/tmp to /run/systemd/unit-root/var/tmp
+Oct 06 08:02:24 stdb01.stratos.xfusioncorp.com systemd[1382]: mariadb.service: Executing: /usr/libexec/mysql-check-upgrade
+Oct 06 08:02:24 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Child 1382 belongs to mariadb.service.
+Oct 06 08:02:24 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Control process exited, code=exited status=0
+Oct 06 08:02:24 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Got final SIGCHLD for state start-post.
+Oct 06 08:02:24 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Changed start-post -> running
+Oct 06 08:02:24 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Job mariadb.service/start finished, result=done
+Oct 06 08:02:24 stdb01.stratos.xfusioncorp.com systemd[1]: Started MariaDB 10.3 database server.
+Oct 06 08:02:24 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Failed to send unit change signal for mariadb.service: Conne
+ction reset by peer
+```
+
+</details>
+
+We are done.
