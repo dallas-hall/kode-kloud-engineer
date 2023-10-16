@@ -2,7 +2,12 @@
 
 ## Task
 
-> The Nautilus DevOps team is ready to launch a new application, which they will deploy on app servers in Stratos Datacenter. They are expecting significant traffic/usage of `squid` on app servers after that. This will generate massive logs, creating huge log files. To utilise the storage efficiently, they need to compress the log files and need to rotate old logs. Check the requirements shared below:<br><br>a. In all app servers install `squid` package.<br>b. Using `logrotate` configure `squid` logs rotation to monthly and keep only 3 rotated logs. If by default log rotation is set, then please update configuration as needed.
+> The Nautilus DevOps team is ready to launch a new application, which they will deploy on app servers in Stratos Datacenter. They are expecting significant traffic/usage of `squid` on app servers after that. This will generate massive logs, creating huge log files. To utilise the storage efficiently, they need to compress the log files and need to rotate old logs. Check the requirements shared below:
+>
+> * In all app servers install `squid` package.
+> * Using `logrotate` configure `squid` logs rotation to monthly and keep only 3 rotated logs.
+>
+> (If by default log rotation is set, then please update configuration as needed)
 
 ## Preliminary Steps
 
@@ -11,7 +16,9 @@
 
 ## Research
 
-* Logrotate - https://www.redhat.com/sysadmin/setting-logrotate & https://www.digitalocean.com/community/tutorials/how-to-manage-logfiles-with-logrotate-on-ubuntu-16-04
+* Logrotate
+  * https://www.redhat.com/sysadmin/setting-logrotate
+  * https://www.digitalocean.com/community/tutorials/how-to-manage-logfiles-with-logrotate-on-ubuntu-16-04
 * `man logrotate`
 
 ## Steps
@@ -25,29 +32,18 @@ ssh tony@stapp01
 # Switch to root.
 sudo -i
 
+# Check current Linux version, it was CentOS Stream 8
+cat /etc/*rel*
+
+
 # Install the app.
-yum install -y squid
-```
+dnf install -y squid
 
-```
-...
-Installed:
-  squid.x86_64 7:3.5.20-17.el7_9.7
-...
-```
-
-```bash
 # Start and enable squid.
 systemctl enable --now squid
-```
 
-```
-Created symlink from /etc/systemd/system/multi-user.target.wants/squid.service to /usr/lib/systemd/system/squid.service.
-```
-
-```bash
 # Take a backup of the pre-existing squid logrotate file.
-cp /etc/logrotate.d/squid /etc/logrotate.d/squid.bak
+cp /etc/logrotate.d/squid /etc/logrotate.d/squid.old
 
 # Inspect the file to figure out changes.
 cat /etc/logrotate.d/squid
@@ -105,3 +101,5 @@ cat /etc/logrotate.d/squid
 ssh steve@stapp02
 ssh banner@stapp03
 ```
+
+We are done.
