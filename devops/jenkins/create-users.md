@@ -8,10 +8,10 @@
 >
 > It has only a sample job for now. A new developer has joined the Nautilus application development team and they want this user to be added to the Jenkins server as per the details mentioned below:
 >
-> * Create a jenkins user named `rose` with `YchZHRcLkL` password, their full name should be `Rose` (it is case sensitive).
-> * Using Project-based Matrix Authorization Strategy assign `overall read` permission to rose user.
+> * Create a jenkins user named `ravi` with `dCV3szSGNA` password, their full name should be `Ravi` (it is case sensitive).
+> * Using Project-based Matrix Authorization Strategy assign `overall read` permission to ravi user.
 > * Remember to remove all permissions for Anonymous users (if given) and make sure admin user has overall Administer permissions.
-> * There is one existing job, make sure rose only has read permissions to that job (we are not worried about other permissions like Agent, SCM, etc.).
+> * There is one existing job, make sure `ravi`` only has read permissions to that job (we are not worried about other permissions like Agent, SCM, etc.).
 >
 > **Notes:**
 >
@@ -31,6 +31,7 @@
   * https://www.jenkins.io/doc/book/security/access-control/permissions/
   * https://www.jenkins.io/doc/book/security/managing-security/#access-control
   * https://plugins.jenkins.io/role-strategy/
+  * https://plugins.jenkins.io/matrix-auth/
 * Managing Jenkins Plugins
   * https://www.jenkins.io/doc/book/managing/plugins/
 
@@ -40,7 +41,7 @@
 * Click the Jenkins button to access to UI through a broswer.
 * Login with the credentials.
 * Click Manage Jenkins > Manage Users > Create User and create the user.
-* Follow https://www.jenkins.io/doc/book/managing/plugins/#from-the-web-ui and install the Role-based Authorization Strategy plugin.
-* 
+* Follow https://www.jenkins.io/doc/book/managing/plugins/#from-the-web-ui and install the Matrix Authorization Strategy plugin.
+* Click Manage Jenkins > Configure Global Security and configure the security settings.
 
 We are done.
