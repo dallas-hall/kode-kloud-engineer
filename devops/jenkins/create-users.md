@@ -8,10 +8,10 @@
 >
 > It has only a sample job for now. A new developer has joined the Nautilus application development team and they want this user to be added to the Jenkins server as per the details mentioned below:
 >
-> * Create a jenkins user named `ravi` with `dCV3szSGNA` password, their full name should be `Ravi` (it is case sensitive).
-> * Using Project-based Matrix Authorization Strategy assign `overall read` permission to ravi user.
+> * Create a jenkins user named `anita` with `8FmzjvFU6S` password, their full name should be `Anita` (it is case sensitive).
+> * Using Project-based Matrix Authorization Strategy assign overall read permission to `anita`` user.
 > * Remember to remove all permissions for Anonymous users (if given) and make sure admin user has overall Administer permissions.
-> * There is one existing job, make sure `ravi`` only has read permissions to that job (we are not worried about other permissions like Agent, SCM, etc.).
+> * There is one existing job, make sure `anita` only has read permissions to that job (we are not worried about other permissions like Agent, SCM, etc.).
 >
 > **Notes:**
 >
@@ -30,7 +30,6 @@
 * ACLs
   * https://www.jenkins.io/doc/book/security/access-control/permissions/
   * https://www.jenkins.io/doc/book/security/managing-security/#access-control
-  * https://plugins.jenkins.io/role-strategy/
   * https://plugins.jenkins.io/matrix-auth/
 * Managing Jenkins Plugins
   * https://www.jenkins.io/doc/book/managing/plugins/
@@ -39,9 +38,14 @@
 ## Steps
 
 * Click the Jenkins button to access to UI through a broswer.
-* Login with the credentials.
+* Login with the `admin` credentials.
 * Click Manage Jenkins > Manage Users > Create User and create the user.
 * Follow https://www.jenkins.io/doc/book/managing/plugins/#from-the-web-ui and install the Matrix Authorization Strategy plugin.
-* Click Manage Jenkins > Configure Global Security and configure the security settings.
+* After Jenkins restarts, login with the `admin` credentials.
+* Click Manage Jenkins > Configure Global Security
+  * Authorization = Project Based Matrix-based security
+  * Remove all permissions for `Anonymous`.
+  * Add overall read for `anita`.
+  * Add overall administer for `admin`.
 
 We are done.
