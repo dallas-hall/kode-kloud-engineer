@@ -112,7 +112,7 @@ spec:
 Close the file with control + d i.e. `^D`
 
 ```bash
-k apply -f deploy.yaml
+k apply -f svc.yaml
 ```
 
 ```
