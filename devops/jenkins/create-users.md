@@ -9,8 +9,8 @@
 > It has only a sample job for now. A new developer has joined the Nautilus application development team and they want this user to be added to the Jenkins server as per the details mentioned below:
 >
 > * Create a jenkins user named `anita` with `8FmzjvFU6S` password, their full name should be `Anita` (it is case sensitive).
-> * Using Project-based Matrix Authorization Strategy assign overall read permission to `anita`` user.
-> * Remember to remove all permissions for Anonymous users (if given) and make sure admin user has overall Administer permissions.
+> * Using Project-based Matrix Authorization Strategy assign overall read permission to `anita` user.
+> * Remember to remove all permissions for `Anonymous` users (if given) and make sure `admin` user has overall Administer permissions.
 > * There is one existing job, make sure `anita` only has read permissions to that job (we are not worried about other permissions like Agent, SCM, etc.).
 >
 > **Notes:**
