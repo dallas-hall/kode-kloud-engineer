@@ -33,7 +33,6 @@
 
 * Click the Jenkins button to access to UI through a broswer.
 * Login with the `admin` credentials.
-* Click Manage Jenkins > Manage Users > Create User and create the user.
 * Follow https://www.jenkins.io/doc/book/managing/plugins/#from-the-web-ui and install the Folders plugin.
 * After Jenkins restarts, login with the `admin` credentials.
 * Click the + button and create the `Apache` folder.
