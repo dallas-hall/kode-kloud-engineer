@@ -26,6 +26,8 @@
   * https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html
 * Targetting hosts
   * https://docs.ansible.com/ansible/latest/inventory_guide/intro_patterns.html
+* ACLs
+  * https://docs.ansible.com/ansible/latest/collections/ansible/posix/acl_module.html
 
 ## Steps
 
