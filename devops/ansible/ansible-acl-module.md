@@ -1,14 +1,14 @@
-# Ansible File Module
+# Ansible ACL Module
 
 ## Task
 
-> The Nautilus DevOps team is practicing some of the Ansible modules and creating and testing different Ansible playbooks to accomplish tasks. Recently they started testing an Ansible file module to create soft links on all app servers. Below you can find more details about it.
+> There are some files that need to be created on all app servers in Stratos DC. The Nautilus DevOps team want these files to be owned by user `root` only however, they also want that the app specific user to have a set of permissions on these files. All tasks must be done using Ansible only, so they need to create a playbook. Below you can find more information about the task.
 >
-> Write a playbook.yml under `/home/thor/ansible` directory on jump host, an inventory file is already present under `/home/thor/ansible` directory on jump host itself. Using this playbook accomplish below given tasks:
+> Create a playbook named `playbook.yml` under `/home/thor/ansible` directory on jump host, an inventory file is already present under `/home/thor/ansible` directory on Jump Server itself.
 >
-> * Create an empty file `/opt/dba/blog.txt` on app server 1; its user owner and group owner should be `tony`. Create a symbolic link of source path `/opt/dba` to destination `/var/www/html`.
-> * Create an empty file `/opt/dba/story.txt` on app server 2; its user owner and group owner should be `steve`. Create a symbolic link of source path `/opt/dba` to destination `/var/www/html`.
-> * Create an empty file `/opt/dba/media.txt` on app server 3; its user owner and group owner should be `banner`. Create a symbolic link of source path `/opt/dba` to destination `/var/www/html`.
+> * Create an empty file `blog.txt` under `/opt/dba/` directory on app server 1. Set some acl properties for this file. Using acl provide `read '(r)'` permissions to group `tony` (i.e `entity` is tony and `etype` is group).
+> * Create an empty file `story.txt` under `/opt/dba/` directory on app server 2. Set some acl properties for this file. Using acl provide `read + write '(rw)'` permissions to user `steve` (i.e `entity` is steve and `etype` is user).
+> * Create an empty file `media.txt` under `/opt/dba/` on app server 3. Set some acl properties for this file. Using acl provide `read + write '(rw)'` permissions to group `banner` (i.e `entity` is banner and `etype` is group).
 >
 > **Note:** Validation will try to run the playbook using command `ansible-playbook -i inventory playbook.yml` so please make sure playbook works this way without passing any extra arguments.
 
@@ -84,16 +84,16 @@ cat > ~/playbook/playbook.yml
       file:
         path: /opt/dba/blog.txt
         state: touch
-        mode: '0644'
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
-    - name: Create symlink.
-      file:
-        src: /opt/dba
-        dest: /var/www/html
-        state: link
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
+        mode: '0600'
+        owner: root
+        group: root
+    - name: Set ACLs
+      acl:
+        path: /opt/dba/blog.txt
+        entity: "{{ ansible_user }}"
+        etype: group
+        permissions: r
+        state: present
 
 - hosts: stapp02
   become: yes
@@ -102,16 +102,16 @@ cat > ~/playbook/playbook.yml
       file:
         path: /opt/dba/story.txt
         state: touch
-        mode: '0644'
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
-    - name: Create symlink.
-      file:
-        src: /opt/dba
-        dest: /var/www/html
-        state: link
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
+        mode: '0600'
+        owner: root
+        group: root
+    - name: Set ACLs
+      acl:
+        path: /opt/dba/story.txt
+        entity: "{{ ansible_user }}"
+        etype: user
+        permissions: rw
+        state: present
 
 - hosts: stapp03
   become: yes
@@ -120,16 +120,16 @@ cat > ~/playbook/playbook.yml
       file:
         path: /opt/dba/media.txt
         state: touch
-        mode: '0644'
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
-    - name: Create symlink.
-      file:
-        src: /opt/dba
-        dest: /var/www/html
-        state: link
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
+        mode: '0600'
+        owner: root
+        group: root
+    - name: Set ACLs
+      acl:
+        path: /opt/dba/media.txt
+        entity: "{{ ansible_user }}"
+        etype: group
+        permissions: rw
+        state: present
 
 ```
 
@@ -137,7 +137,7 @@ Close the file with control + d i.e. `^D`
 
 ```bash
 # Run playbook
-cd playbook
+cd ansible
 ansible-playbook -i inventory playbook.yml
 ```
 
@@ -153,22 +153,43 @@ Looks okay, but lets check.
 
 ```bash
 # Check the symlinks and the contents.
-ansible -i inventory all -m shell -a 'ls -Adhl /var/www/html && ls -Ahl /var/www/html/'
+ansible -i inventory all -m shell -a 'ls -Ahl /opt/dba; getfacl /opt/dba/*' -f 1
 ```
 
 ```
 stapp01 | CHANGED | rc=0 >>
-lrwxrwxrwx 1 root root 8 Nov 24 03:55 /var/www/html -> /opt/dba
 total 0
--rw-r--r-- 1 tony tony 0 Nov 24 03:57 blog.txt
-stapp03 | CHANGED | rc=0 >>
-lrwxrwxrwx 1 root root 8 Nov 24 03:57 /var/www/html -> /opt/dba
-total 0
--rw-r--r-- 1 banner banner 0 Nov 24 03:57 media.txt
+-rw-r-----+ 1 root root 0 Nov 24 04:15 blog.txt
+# file: opt/dba/blog.txt
+# owner: root
+# group: root
+user::rw-
+group::---
+group:tony:r--
+mask::r--
+other::---getfacl: Removing leading '/' from absolute path names
 stapp02 | CHANGED | rc=0 >>
-lrwxrwxrwx 1 root root 8 Nov 24 03:57 /var/www/html -> /opt/dba
 total 0
--rw-r--r-- 1 steve steve 0 Nov 24 03:57 story.txt
+-rw-rw----+ 1 root root 0 Nov 24 04:15 story.txt
+# file: opt/dba/story.txt
+# owner: root
+# group: root
+user::rw-
+user:steve:rw-
+group::---
+mask::rw-
+other::---getfacl: Removing leading '/' from absolute path names
+stapp03 | CHANGED | rc=0 >>
+total 0
+-rw-rw----+ 1 root root 0 Nov 24 04:15 media.txt
+# file: opt/dba/media.txt
+# owner: root
+# group: root
+user::rw-
+group::---
+group:banner:rw-
+mask::rw-
+other::---getfacl: Removing leading '/' from absolute path names
 ```
 
 We are done.
