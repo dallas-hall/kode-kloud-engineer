@@ -110,7 +110,7 @@ stapp03                    : ok=2    changed=1    unreachable=0    failed=0    s
 Looks okay, but lets check.
 
 ```bash
-# Check the symlinks and the contents.
+# Check the service status.
 ansible -i inventory all -m shell -a 'systemctl status httpd | head -n 3' -f 1
 ```
 
