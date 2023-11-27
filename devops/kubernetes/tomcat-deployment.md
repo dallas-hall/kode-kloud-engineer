@@ -23,7 +23,8 @@ Follow the [k8s environment setup steps.](setup-k8s-env.md).
 
 ```bash
 # Check cluster connection
-kubec ```
+k get no -o wide
+```
 
 ```
 NAME                      STATUS   ROLES           AGE   VERSION                     INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                                      KERNEL-VERSION   CONTAINER-RUNTIME
