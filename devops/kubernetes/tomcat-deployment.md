@@ -66,6 +66,8 @@ spec:
         - containerPort: 8080
 ```
 
+Close the file with control + d i.e. `^D`
+
 ```bash
 # Create the deployment
 k apply -f deploy.yml
@@ -94,7 +96,12 @@ spec:
   type: NodePort
 ```
 
+Close the file with control + d i.e. `^D`
+
 ```bash
+# Create the NodePort
+k apply -f nodeport.yml
+
 # Test connectivity
 curl kodekloud-control-plane:32227
 ```
