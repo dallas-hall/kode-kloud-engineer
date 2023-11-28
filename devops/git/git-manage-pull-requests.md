@@ -34,8 +34,7 @@
 
 ## Research
 
-* `git cherry-pick`
-  * https://stackoverflow.com/questions/5304391/how-to-cherry-pick-from-1-branch-to-another
+None.
 
 ## Steps
 
