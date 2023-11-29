@@ -1,8 +1,11 @@
-# Docker Bridge Network Setup
+# Docker macvlan Network Setup
 
 ## Task
 
-> The Nautilus DevOps team needs to set up several docker environments for different applications. One of the team members has been assigned a ticket where he has been asked to create some docker networks to be used later. Complete the task based on the following ticket description:<br><br>a. Create a docker network named as `news` on App Server 3 in Stratos DC.<br>b. Configure it to use `bridge` drivers.<br>c. Set it to use subnet `172.168.0.0/24` and iprange `172.168.0.3/24`.
+> The Nautilus DevOps team needs to set up several docker environments for different applications. One of the team members has been assigned a ticket where he has been asked to create some docker networks to be used later. Complete the task based on the following ticket description:
+> * Create a docker network named as `official` on App Server 3 in Stratos DC.
+> * Configure it to use `macvlan` drivers.
+> * Set it to use subnet `10.10.1.0/24` and iprange `10.10.1.3/24`.
 
 ## Preliminary Steps
 
@@ -22,29 +25,21 @@
 # Connect to application servers
 ssh banner@stapp03
 
-# Check current Linux version, it was CentOS 7.6
-cat /etc/*release*
+# Check current Linux version, it was CentOS Stream 8
+cat /etc/*rel*
 
 # Switch to root
-sudo su
+sudo -i
 
-# View running containers
+# View running containers, there were none.
 docker ps -a
-```
 
-```
-CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
-```
-
-No running containers.
-
-```bash
 # Create the docker network
-docker network create --driver bridge --ip-range 172.168.0.3/24 --subnet 172.168.0.0/24 news
+docker network create --driver macvlan --ip-range 10.10.1.3/24 --subnet 10.10.1.0/24 official
 ```
 
 ```
-d824ba98e8d754ea540febc2f03998cd9b1465e9315526939d1fbffddba34f1b
+5d13eb305eecdd13c9535d666819c3cdc3f7bc84f1a75e9f8cd63ed96d3542eb
 ```
 
 ```bash
@@ -53,34 +48,34 @@ docker network ls
 ```
 
 ```
-NETWORK ID     NAME      DRIVER    SCOPE
-279df1b36fda   bridge    bridge    local
-69a34ed7b6a8   host      host      local
-d824ba98e8d7   news      bridge    local
-2ff81dab515d   none      null      local
+NETWORK ID          NAME                DRIVER              SCOPE
+78ef21b636ca        bridge              bridge              local
+bf8ed6c46a87        host                host                local
+bb922a782335        none                null                local
+5d13eb305eec        official            macvlan             local
 ```
 
 ```bash
 # View our network
-docker network inspect news
+docker network inspect official
 ```
 
 ```json
 [
     {
-        "Name": "news",
-        "Id": "d824ba98e8d754ea540febc2f03998cd9b1465e9315526939d1fbffddba34f1b",
-        "Created": "2022-12-20T22:11:06.028941203Z",
+        "Name": "official",
+        "Id": "5d13eb305eecdd13c9535d666819c3cdc3f7bc84f1a75e9f8cd63ed96d3542eb",
+        "Created": "2023-11-29T04:04:41.301166739Z",
         "Scope": "local",
-        "Driver": "bridge",
+        "Driver": "macvlan",
         "EnableIPv6": false,
         "IPAM": {
             "Driver": "default",
             "Options": {},
             "Config": [
                 {
-                    "Subnet": "172.168.0.0/24",
-                    "IPRange": "172.168.0.3/24"
+                    "Subnet": "10.10.1.0/24",
+                    "IPRange": "10.10.1.3/24"
                 }
             ]
         },
