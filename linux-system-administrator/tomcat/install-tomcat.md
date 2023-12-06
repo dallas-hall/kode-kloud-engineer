@@ -2,7 +2,13 @@
 
 ## Task
 
-> The Nautilus application development team recently finished the beta version of one of their Java-based applications, which they are planning to deploy on one of the app servers in Stratos DC. After an internal team meeting, they have decided to use the tomcat application server. Based on the requirements mentioned below complete the task:<br><br>a. Install tomcat server on App Server 3 using yum.<br>b. Configure it to run on port `3000`.<br>c. There is a `ROOT.war` file on Jump host at location `/tmp`. Deploy it on this tomcat server and make sure the webpage works directly on base URL i.e without specifying any sub-directory anything like this `http://URL/ROOT`
+> The Nautilus application development team recently finished the beta version of one of their Java-based applications, which they are planning to deploy on one of the app servers in Stratos DC. After an internal team meeting, they have decided to use the tomcat application server. Based on the requirements mentioned below complete the task:
+> 
+> * Install tomcat server on App Server 1 using yum.
+> * Configure it to run on port `6300`.
+> * There is a `ROOT.war` file on Jump host at location `/tmp`.
+> 
+> Deploy it on this tomcat server and make sure the webpage works directly on base URL i.e without specifying any sub-directory anything like this `curl http://stapp01:6300`
 
 ## Preliminary Steps
 
@@ -11,28 +17,31 @@
 
 ## Research
 
-* Install Tomcat - https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-7-on-centos-7-via-yum
-* Change Tomcat port - https://stackoverflow.com/questions/18415578/how-to-change-tomcat-port-number
-* Copy WAR file to the correct place - https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-7-on-centos-7-via-yum
+* Install Tomcat
+  * https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-7-on-centos-7-via-yum
+* Change Tomcat port
+  * https://stackoverflow.com/questions/18415578/how-to-change-tomcat-port-number
+* Copy WAR file to the correct place
+  * https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-7-on-centos-7-via-yum
 
 ## Steps
 
 ```bash
 # Copy over our WAR file from the thor jumpbox
-scp /tmp/ROOT.war banner@stapp03:/home/banner
+scp /tmp/ROOT.war tony@stapp01:/home/tony
 ```
 
 ```
-banner@stapp03's password: 
+tony@stapp01's password: 
 ROOT.war                                        100% 4529    11.9MB/s   00:00
 ```
 
 ```bash
 # Connect to application servers
-ssh banner@stapp03
+ssh tony@stapp01
 
-# Check current Linux version, it was CentOS 7.6
-cat /etc/*release*
+# Check current Linux version, it was CentOS Stream 8
+cat /etc/*rel*
 
 # Switch to root
 sudo -i
@@ -48,60 +57,74 @@ java -version
 
 ```bash
 # Install Tomcat which installs Java 1.8
-yum install -y tomcat
+dnf install -y tomcat
 ```
 
 ```
 ...
 Installed:
-  tomcat.noarch 0:7.0.76-16.el7_9
 ...
-Dependency Installed:
-...
-  java-1.8.0-openjdk.x86_64 1:1.8.0.345.b01-1.el7_9
+  java-1.8.0-openjdk-headless-1:1.8.0.392.b08-4.el8.x86_64                 
+...                                         
+  tomcat-1:9.0.62-27.el8.noarch                                            
 ...
 ```
 
 ```bash
-# Update port to 3000 after taking a backup
+# Update port to 6300 after taking a backup
 cp -a /etc/tomcat/server.xml /etc/tomcat/server.xml.old
-sed -i -r 's/<Connector port="8080"/<Connector port="3000"/g' /etc/tomcat/server.xml
+sed -i -r 's/<Connector port="8080"/<Connector port="6300"/g' /etc/tomcat/server.xml
 
 # Start and enable the Tomcat service
 systemctl enable --now tomcat
-```
 
-```
-Created symlink from /etc/systemd/system/multi-user.target.wants/tomcat.service to /usr/lib/systemd/system/tomcat.service.
-```
-
-```bash
 # Copy the WAR file to the correct place
-mv ~banner/ROOT.war /usr/share/tomcat/webapps
+mv ~tony/ROOT.war /usr/share/tomcat/webapps
 
 # Update WAR ownership
 chown tomcat: /usr/share/tomcat/webapps/ROOT.war
 
 # Test webapp
-curl -Lv localhost:3000/ROOT
+curl -Lv localhost:6300
 ```
 
 ```
-* About to connect() to localhost port 3000 (#0)
+ Rebuilt URL to: localhost:6300/
 *   Trying 127.0.0.1...
-* Connected to localhost (127.0.0.1) port 3000 (#0)
-> GET /ROOT HTTP/1.1
-> User-Agent: curl/7.29.0
-> Host: localhost:3000
+* TCP_NODELAY set
+* Connected to localhost (127.0.0.1) port 6300 (#0)
+> GET / HTTP/1.1
+> Host: localhost:6300
+> User-Agent: curl/7.61.1
 > Accept: */*
 > 
-< HTTP/1.1 404 Not Found
-< Server: Apache-Coyote/1.1
-< Content-Type: text/html;charset=utf-8
-< Content-Language: en
-< Content-Length: 959
-< Date: Mon, 24 Oct 2022 01:30:59 GMT
+< HTTP/1.1 200 
+< Accept-Ranges: bytes
+< ETag: W/"471-1580289830000"
+< Last-Modified: Wed, 29 Jan 2020 09:23:50 GMT
+< Content-Type: text/html
+< Content-Length: 471
+< Date: Wed, 06 Dec 2023 04:03:18 GMT
 < 
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>SampleWebApp</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h2>Welcome to xFusionCorp Industries!</h2>
+        <br>
+    
+    </body>
+</html>
 * Connection #0 to host localhost left intact
-<html><head><title>Apache Tomcat/7.0.76 - Error report</title><style><!--H1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} H2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} H3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} BODY {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} B {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} P {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;}A {color : black;}A.name {color : black;}HR {color : #525D76;}--></style> </head><body><h1>HTTP Status 404 - /ROOT</h1><HR size="1" noshade="noshade"><p><b>type</b> Status report</p><p><b>message</b> <u>/ROOT</u></p><p><b>description</b> <u>The requested resource is not available.</u></p><HR size="1" noshade="noshade"><h3>Apache Tomcat/7.0.76</h3></body></html>
 ```
+
+We are done.
