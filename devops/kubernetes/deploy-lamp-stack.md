@@ -56,28 +56,12 @@ kodekloud-control-plane   Ready    control-plane   20m   v1.27.3-44+b5c876a05b7b
 We can connect fine from Thor jumpbox.
 
 ```bash
-# Create the ConfigMap YAML
-cat > cm.yaml
-```
-
-```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: php-config
-data:
-  php.ini: |
-    variables_order = "EGPCS"
-```
-
-Close the file with control + d i.e. `^D`
-
-
-```bash
-k apply -f cm.yaml
+# Create the ConfigMap.
+echo 'variables_order = "EGPCS"' > /tmp/php.ini
+k create cm php-config --from-file /tmp/php.ini
 
 # Create Secrets.
-k create secret generic mysql --from-literal=MYSQL_ROOT_PASSWORD='Abc123!@#' --from-literal=MYSQL_DATABASE=php --from-literal=MYSQL_USER=php-app --from-literal=MYSQL_PASSWORD='Abc123!@#' --from-literal=MYSQL_HOST=mysql-service
+k create secret generic mysql-config --from-literal MYSQL_ROOT_PASSWORD=paswd --from-literal MYSQL_DATABASE=lampdb --from-literal MYSQL_USER=thor --from-literal MYSQL_PASSWORD=mjolnir123 --from-literal MYSQL_HOST=mysql-service
 
 # Create Deployment YAML file.
 cat > deploy.yaml
@@ -105,31 +89,31 @@ spec:
         name: mysql-container
         ports:
         - containerPort: 3306
-        env:
+        env: &env_var # Create a Go Anchor (i.e. macro)
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mysql
+              name: mysql-config
               key: MYSQL_ROOT_PASSWORD
         - name: MYSQL_DATABASE
           valueFrom:
             secretKeyRef:
-              name: mysql
+              name: mysql-config
               key: MYSQL_DATABASE
         - name: MYSQL_USER
           valueFrom:
             secretKeyRef:
-              name: mysql
+              name: mysql-config
               key: MYSQL_USER
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mysql
+              name: mysql-config
               key: MYSQL_PASSWORD
         - name: MYSQL_HOST
           valueFrom:
             secretKeyRef:
-              name: mysql
+              name: mysql-config
               key: MYSQL_HOST
       - image: webdevops/php-apache:alpine-3-php7
         name: httpd-php-container
@@ -139,32 +123,7 @@ spec:
         - name: php-ini
           mountPath: /opt/docker/etc/php/php.ini
           subPath: php.ini
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql
-              key: MYSQL_ROOT_PASSWORD
-        - name: MYSQL_DATABASE
-          valueFrom:
-            secretKeyRef:
-              name: mysql
-              key: MYSQL_DATABASE
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: mysql
-              key: MYSQL_USER
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql
-              key: MYSQL_PASSWORD
-        - name: MYSQL_HOST
-          valueFrom:
-            secretKeyRef:
-              name: mysql
-              key: MYSQL_HOST
+        env: *env_var # Reference a Go Anchor (i.e. macro). This will inject everything inside of of the Anchor here.
       volumes:
       - name: php-ini
         configMap:
@@ -240,7 +199,7 @@ if ($result->connect_error) {
 k get po
 
 # Copy the index.php file into the container.
-k cp /tmp/index.php lamp-wp-67894f8497-fv6n2:/app/index.php -c httpd-php-container
+k cp /tmp/index.php lamp-wp-67894f8497-qdcdq:/app/index.php -c httpd-php-container
 
 # The connection
 curl kodekloud-control-plane:30008
