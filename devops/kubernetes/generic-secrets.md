@@ -2,7 +2,11 @@
 
 ## Task
 
-> The Nautilus DevOps team is working to deploy some tools in Kubernetes cluster. Some of the tools are licence based so that licence information needs to be stored securely within Kubernetes cluster. Therefore, the team wants to utilize Kubernetes secrets to store those secrets. Below you can find more details about the requirements:<br><br>We already have a secret key file `news.txt` under `/opt` location on jump host. Create a generic secret named news, it should contain the password/license-number present in `news.txt` file.<br>Also create a pod named `secret-xfusion`.<br>Configure pod's spec as container name should be `secret-container-xfusion`, image should be `centos` preferably with `latest` tag (remember to mention the tag with image). Use `sleep` command for container so that it remains in running state. Consume the created secret and mount it under `/opt/`apps within the container.<br>To verify you can `exec` into the container `secret-container-xfusion`, to check the secret key under the mounted path `/opt/apps`.
+> The Nautilus DevOps team is working to deploy some tools in Kubernetes cluster. Some of the tools are licence based so that licence information needs to be stored securely within Kubernetes cluster. Therefore, the team wants to utilize Kubernetes secrets to store those secrets. Below you can find more details about the requirements:
+> * We already have a secret key file `beta.txt` under `/opt` location on jump host. Create a generic secret named `beta`, it should contain the password/license-number present in `beta.txt` file.
+> * Also create a pod named `secret-devops`.
+> * Configure pod's spec as container name should be `secret-container-devops`, image should be `debian` preferably with `latest` tag (remember to mention the tag with image). Use `sleep` command for container so that it remains in running state. Consume the created secret and mount it under `/opt/games` within the container.
+> * To verify you can `exec` into the container `secret-container-devops`, to check the secret key under the mounted path `/opt/games`.
 
 ## Preliminary Steps
 
@@ -26,14 +30,13 @@ k get no -o wide
 ```
 
 ```
-NAME                      STATUS   ROLES                  AGE    VERSION                          INTERNAL-IP   EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION   CONTAINER-RUNTIME
-kodekloud-control-plane   Ready    control-plane,master   145m   v1.20.5-rc.0.18+c4af4684437b37   172.17.0.2    <none>        Ubuntu 20.10   5.4.0-1092-gcp   containerd://1.5.0-beta.0-69-gb3f240206
+NAME                      STATUS   ROLES           AGE   VERSION                     INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                                      KERNEL-VERSION   CONTAINER-RUNTIME
+kodekloud-control-plane   Ready    control-plane   95m   v1.27.3-44+b5c876a05b7bbd   172.17.0.2    <none>        Ubuntu Mantic Minotaur (development branch)   5.4.0-1106-gcp   containerd://1.7.1-2-g8f682ed69
 ```
 
 ```bash
-# Create the secret
-k create secret generic news --from-file=/opt/news.txt
-secret/news created
+# Create the Secret.
+k create secret generic beta --from-file=/opt/beta.txt
 
 # Create the Pod YAML file
 cat > pod.yaml
@@ -44,22 +47,22 @@ apiVersion: v1
 kind: Pod
 metadata:
   labels:
-    run: secret-xfusion
-  name: secret-xfusion
+    run: secret-devops
+  name: secret-devops
 spec:
   containers:
-  - image: centos:latest
-    name: secret-container-xfusion
+  - image: debian:latest
+    name: secret-container-devops
     volumeMounts:
     - name: foo
-      mountPath: "/opt/apps"
+      mountPath: "/opt/games"
       readOnly: true
     command: ["sleep"]
     args: ["999"]
   volumes:
   - name: foo
     secret:
-      secretName: news
+      secretName: beta
 ```
 
 Close the file with control + d i.e. `^D`
@@ -67,10 +70,9 @@ Close the file with control + d i.e. `^D`
 ```bash
 # Create the pod
 k apply -f pod.yaml
-pod/secret-xfusion created
 
 # Check the secret
-k exec -it secret-xfusion -- cat /opt/apps/news.txt
+k exec -it secret-devops -- cat /opt/games/beta.txt
 ```
 
 ```
