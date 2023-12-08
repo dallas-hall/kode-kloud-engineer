@@ -2,7 +2,17 @@
 
 ## Task
 
-> There are a number of parameters that are used by the applications. We need to define these as environment variables, so that we can use them as needed within different configs. Below is a scenario which needs to be configured on Kubernetes cluster. Please find below more details about the same.<br><br>Create a pod named `envars`.<br>Container name should be `fieldref-container`, use image `nginx` preferable `latest` tag, use `command` `'sh', '-c'` and `args` should be `'while true; do echo -en '/n'; printenv NODE_NAME POD_NAME; printenv POD_IP POD_SERVICE_ACCOUNT; sleep 10; done;'`(Note: please take care of indentations)<br><br>Define Four environment variables as mentioned below:<br>a.) The first env should be named as `NODE_NAME`, set valueFrom fieldref and fieldPath should be spec.nodeName.<br>b.) The second env should be named as `POD_NAME`, set valueFrom fieldref and fieldPath should be metadata.name.<br>c.) The third env should be named as `POD_IP`, set valueFrom fieldref and fieldPath should be status.podIP.<br>d.) The fourth env should be named as `POD_SERVICE_ACCOUNT`, set valueFrom fieldref and fieldPath shoulbe be spec.serviceAccountName.<br> Set restart policy to Never.<br>To check the output, exec into the pod and use `printenv` command.
+> There are a number of parameters that are used by the applications. We need to define these as environment variables, so that we can use them as needed within different configs. Below is a scenario which needs to be configured on Kubernetes cluster. Please find below more details about the same.
+> 
+> * Create a pod named `envars`.
+> * Container name should be `fieldref-container`, use image `httpd` preferable `latest` tag, use `command` `'sh', '-c'` and `args` should be `'while true; do echo -en '/n'; printenv NODE_NAME POD_NAME; printenv POD_IP POD_SERVICE_ACCOUNT; sleep 10; done;'`(Note: please take care of indentations)
+> * Define Four environment variables as mentioned below:
+>   * The first env should be named as `NODE_NAME`, set valueFrom fieldref and fieldPath should be `spec.nodeName`.
+>   * The second env should be named as `POD_NAME`, set valueFrom fieldref and fieldPath should be `metadata.name`.
+>   * The third env should be named as `POD_IP`, set valueFrom fieldref and fieldPath should be `status.podIP`.
+>   * The fourth env should be named as `POD_SERVICE_ACCOUNT`, set valueFrom fieldref and fieldPath shoulbe be `spec.serviceAccountName`.
+> * Set restart policy to `Never`.
+> * To check the output, exec into the pod and use `printenv` command.
 
 ## Preliminary Steps
 
@@ -27,8 +37,8 @@ k get no -o wide
 ```
 
 ```
-NAME                      STATUS   ROLES                  AGE    VERSION                          INTERNAL-IP   EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION   CONTAINER-RUNTIME
-kodekloud-control-plane   Ready    control-plane,master   145m   v1.20.5-rc.0.18+c4af4684437b37   172.17.0.2    <none>        Ubuntu 20.10   5.4.0-1092-gcp   containerd://1.5.0-beta.0-69-gb3f240206
+NAME                      STATUS   ROLES           AGE   VERSION                     INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                                      KERNEL-VERSION   CONTAINER-RUNTIME
+kodekloud-control-plane   Ready    control-plane   38m   v1.27.3-44+b5c876a05b7bbd   172.17.0.2    <none>        Ubuntu Mantic Minotaur (development branch)   5.4.0-1106-gcp   containerd://1.7.1-2-g8f682ed69
 ```
 
 ```bash
@@ -44,8 +54,8 @@ metadata:
 spec:
   containers:
     - name: fieldref-container
-      image: nginx:latest
-      command: ["sh", "-c"]
+      image: httpd:latest
+      command: ['sh', '-c']
       args:
       - "while true; do echo -en '/n'; printenv NODE_NAME POD_NAME; printenv POD_IP POD_SERVICE_ACCOUNT; sleep 10; done;"
       env:
@@ -71,27 +81,22 @@ spec:
 ```bash
 # Creat the Pod
 k apply -f pod.yaml
-```
 
-```
-pod/envars created
-```
-
-```bash
 # View the environment variables
-k exec -it envars -- printenv
+k exec envars -- printenv
 ```
 
 ```
-PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PATH=/usr/local/apache2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 HOSTNAME=envars
-NGINX_VERSION=1.25.1
-NJS_VERSION=0.7.12
-PKG_RELEASE=1~bookworm
-NODE_NAME=kodekloud-control-plane
-POD_NAME=envars
+HTTPD_PREFIX=/usr/local/apache2
+HTTPD_VERSION=2.4.58
+HTTPD_SHA256=fa16d72a078210a54c47dd5bef2f8b9b8a01d94909a51453956b3ec6442ea4c5
+HTTPD_PATCHES=
 POD_IP=10.244.0.5
 POD_SERVICE_ACCOUNT=default
+NODE_NAME=kodekloud-control-plane
+POD_NAME=envars
 KUBERNETES_SERVICE_PORT=443
 KUBERNETES_SERVICE_PORT_HTTPS=443
 KUBERNETES_PORT=tcp://10.96.0.1:443
@@ -100,7 +105,6 @@ KUBERNETES_PORT_443_TCP_PROTO=tcp
 KUBERNETES_PORT_443_TCP_PORT=443
 KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
 KUBERNETES_SERVICE_HOST=10.96.0.1
-TERM=xterm
 HOME=/root
 ```
 
