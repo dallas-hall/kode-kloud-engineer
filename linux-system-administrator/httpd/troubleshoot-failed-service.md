@@ -2,7 +2,9 @@
 
 ## Task
 
-> The production support team of xFusionCorp Industries has deployed some of the latest monitoring tools to keep an eye on every service, application, etc. running on the systems. One of the monitoring systems reported about Apache service unavailability on one of the app servers in Stratos DC.<br><br>Identify the faulty app host and fix the issue. Make sure Apache service is up and running on all app hosts. They might not hosted any code yet on these servers so you need not to worry about if Apache isn't serving any pages or not, just make sure service is up and running. Also, make sure Apache is running on port `6300` on all app servers.
+> The production support team of xFusionCorp Industries has deployed some of the latest monitoring tools to keep an eye on every service, application, etc. running on the systems. One of the monitoring systems reported about Apache service unavailability on one of the app servers in Stratos DC.
+>
+> Identify the faulty app host and fix the issue. Make sure Apache service is up and running on all app hosts. They might not hosted any code yet on these servers so you need not to worry about if Apache isn't serving any pages or not, just make sure service is up and running. Also, make sure Apache is running on port `6000` on all app servers.
 
 ## Preliminary Steps
 
@@ -19,51 +21,48 @@ Follow [Passwordless ssh setup](networking/passwordless-ssh-access.md) for every
 
 ```bash
 # Check app servers
-ssh stapp01 curl -kLv localhost:6300
+ssh tony@stapp01 curl -kLv localhost:6000
 ```
+
+<details>
+  <summary><b>NOTE:</b> Click me for output.</summary>
 
 ```
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* About to connect() to localhost port 6300 (#0)
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* About to connect() to localhost port 6000 (#0)
 *   Trying 127.0.0.1...
-* Connected to localhost (127.0.0.1) port 6300 (#0)
+* Connected to localhost (127.0.0.1) port 6000 (#0)
 > GET / HTTP/1.1
 > User-Agent: curl/7.29.0
-> Host: localhost:6300
+> Host: localhost:6000
 > Accept: */*
 > 
 { [data not shown]
-100   183    0   183    0     0  26676      0 --:--:-- --:--:-- --:--:-- 30500
+1220 stapp01.stratos.xfusioncorp.com ESMTP Sendmail 8.14.7/8.14.7; Mon, 8 Jan 2024 05:17:38 GMT
+421 4.7.0 stapp01.stratos.xfusioncorp.com Rejecting open proxy localhost [127.0.0.1]
+00   182    0   182    0     0  27978      0 --:--:-- --:--:-- --:--:-- 30333
 * Connection #0 to host localhost left intact
-220 stapp01.stratos.xfusioncorp.com ESMTP Sendmail 8.14.7/8.14.7; Tue, 25 Oct 2022 09:01:08 GMT
-421 
 ```
+
+</details>
+
 
 Looks like we have a problem.
 
 ```bash
 # Connect to the server and investigate
-ssh stapp01
+ssh tony@stapp01
+
+# Check current Linux version, it was CentOS 7.6
+cat /etc/*rel*
 
 # Get root
 sudo -i
 
-# Check httpd service
+# Check httpd service, it was dead.
 systemctl status httpd
-```
 
-```
-● httpd.service - The Apache HTTP Server
-   Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled; vendor preset: disabled)
-   Active: inactive (dead)
-     Docs: man:httpd(8)
-           man:apachectl(8)
-```
-
-Service is dead.
-
-```bash
 # Start the server
 systemctl enable --now httpd
 ```
@@ -77,23 +76,40 @@ There is still an error.
 
 ```bash
 # View the logs
-journalctl -xe
+journalctl -xe -u httpd
 ```
 
-Searched with `/httpd`.
+<details>
+  <summary><b>NOTE:</b> Click me for output.</summary>
 
 ```
-...
+-- Logs begin at Mon 2024-01-08 05:15:30 UTC, end at Mon 2024-01-08 05:19:2
+0 UTC. --
+Jan 08 05:19:20 stapp01.stratos.xfusioncorp.com systemd[1]: Starting The Ap
+ache HTTP Server...
+-- Subject: Unit httpd.service has begun start-up
+-- Defined-By: systemd
+-- Support: http://lists.freedesktop.org/mailman/listinfo/systemd-devel
+-- 
 -- Unit httpd.service has begun starting up.
-Oct 25 09:04:33 stapp01.stratos.xfusioncorp.com httpd[983]: AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using stapp01.stratos.xf
-usioncorp.com. Set the 'ServerName' directive globally to suppress this message
-Oct 25 09:04:33 stapp01.stratos.xfusioncorp.com httpd[983]: (98)Address already in use: AH00072: make_sock: could not bind to address 0.0.0.0:6300
-Oct 25 09:04:33 stapp01.stratos.xfusioncorp.com httpd[983]: no listening sockets available, shutting down
-Oct 25 09:04:33 stapp01.stratos.xfusioncorp.com httpd[983]: AH00015: Unable to open logs
-Oct 25 09:04:33 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: main process exited, code=exited, status=1/FAILURE
-Oct 25 09:04:33 stapp01.stratos.xfusioncorp.com kill[984]: kill: cannot find process ""
-Oct 25 09:04:33 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service: control process exited, code=exited status=1
-Oct 25 09:04:33 stapp01.stratos.xfusioncorp.com systemd[1]: Failed to start The Apache HTTP Server.
+Jan 08 05:19:20 stapp01.stratos.xfusioncorp.com httpd[910]: AH00558: httpd:
+ Could not reliably determine the server's fully qualified domain name, usi
+ng stapp01.stratos.xfusioncorp.com. Set the 'ServerName' directive globally
+ to suppress this message
+Jan 08 05:19:20 stapp01.stratos.xfusioncorp.com httpd[910]: (98)Address alr
+eady in use: AH00072: make_sock: could not bind to address 0.0.0.0:6000
+Jan 08 05:19:20 stapp01.stratos.xfusioncorp.com httpd[910]: no listening so
+ckets available, shutting down
+Jan 08 05:19:20 stapp01.stratos.xfusioncorp.com httpd[910]: AH00015: Unable
+ to open logs
+Jan 08 05:19:20 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.ser
+vice: main process exited, code=exited, status=1/FAILURE
+Jan 08 05:19:20 stapp01.stratos.xfusioncorp.com kill[911]: kill: cannot fin
+d process ""
+Jan 08 05:19:20 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.ser
+vice: control process exited, code=exited status=1
+Jan 08 05:19:20 stapp01.stratos.xfusioncorp.com systemd[1]: Failed to
+ start The Apache HTTP Server.
 -- Subject: Unit httpd.service has failed
 -- Defined-By: systemd
 -- Support: http://lists.freedesktop.org/mailman/listinfo/systemd-devel
@@ -101,24 +117,27 @@ Oct 25 09:04:33 stapp01.stratos.xfusioncorp.com systemd[1]: Failed to start The 
 -- Unit httpd.service has failed.
 -- 
 -- The result is failed.
-Oct 25 09:04:33 stapp01.stratos.xfusioncorp.com systemd[1]: Unit httpd.service entered failed state.
-Oct 25 09:04:33 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.service failed.
-...
+Jan 08 05:19:20 stapp01.stratos.xfusioncorp.com systemd[1]: Unit http
+d.service entered failed state.
+Jan 08 05:19:20 stapp01.stratos.xfusioncorp.com systemd[1]: httpd.ser
+vice failed.
 ```
+
+</details>
 
 There is another service listening on that port.
 
 ```bash
-# View what is running on 6300
-ss -lntp | grep 6300
+# View what is running on 6000
+ss -lntp | grep 6000
 ```
 
 ```
-LISTEN     0      10     127.0.0.1:6300                     *:*                   users:(("sendmail",pid=567,fd=4))
+LISTEN     0      10     127.0.0.1:6000                     *:*                   users:(("sendmail",pid=593,fd=4))
 ```
 
 ```bash
-# Stop the service listening on 6300
+# Stop the service listening on 6000
 systemctl disable --now sendmail
 ```
 
@@ -133,140 +152,19 @@ Could also update the `sendmail` port via `/etc/mail/sendmail.mc` and the defaul
 # Start httpd
 systemctl start httpd
 
-# Test
-curl -kLv localhost:6300
+# Testing locally worked.
+curl -kLv localhost:6000
+
+# Testing externally worked.
+exit
+exit
+curl -kLv stapp01:6000
+
+# Check next server, it worked fine.
+curl -kLv stapp02:6000
+
+# Check next server, it worked fine.
+curl -kLv stapp03:6000
 ```
 
-```
-* About to connect() to localhost port 6300 (#0)
-*   Trying 127.0.0.1...
-* Connected to localhost (127.0.0.1) port 6300 (#0)
-> GET / HTTP/1.1
-> User-Agent: curl/7.29.0
-> Host: localhost:6300
-> Accept: */*
-> 
-< HTTP/1.1 200 OK
-< Date: Tue, 25 Oct 2022 09:08:16 GMT
-< Server: Apache/2.4.6 (CentOS) PHP/5.4.16
-< Last-Modified: Thu, 30 Nov 2017 23:11:00 GMT
-< ETag: "1a4-55f3b5d810900"
-< Accept-Ranges: bytes
-< Content-Length: 420
-< Content-Type: text/html; charset=UTF-8
-< 
-<?php
-/**
- * Front to the WordPress application. This file doesn't do anything, but loads
- * wp-blog-header.php which does and tells WordPress to load the theme.
- *
- * @package WordPress
- */
-
-/**
- * Tells WordPress to load the WordPress theme and output it.
- *
- * @var bool
- */
-define( 'WP_USE_THEMES', true );
-
-/** Loads the WordPress Environment and Template */
-require( dirname( __FILE__ ) . '/wp-blog-header.php' );
-* Connection #0 to host localhost left intact
-```
-
-Looks fine. Exit back to the thor jumpbox to check the other servers.
-
-```bash
-# Check next server
-ssh stapp02 curl -kLv localhost:6300
-```
-
-```
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* About to connect() to localhost port 6300 (#0)
-*   Trying 127.0.0.1...
-* Connected to localhost (127.0.0.1) port 6300 (#0)
-> GET / HTTP/1.1
-> User-Agent: curl/7.29.0
-> Host: localhost:6300
-> Accept: */*
-> 
-< HTTP/1.1 200 OK
-< Date: Tue, 25 Oct 2022 09:01:55 GMT
-< Server: Apache/2.4.6 (CentOS) PHP/5.4.16
-< Last-Modified: Thu, 30 Nov 2017 23:11:00 GMT
-< ETag: "1a4-55f3b5d810900"
-< Accept-Ranges: bytes
-< Content-Length: 420
-< Content-Type: text/html; charset=UTF-8
-< 
-{ [data not shown]
-100   420  100   420    0     0  74<?php
-/**
- * Front to the WordPress application. This file doesn't do anything, but loads
- * wp-blog-header.php which does and tells WordPress to load the theme.
- *
- * @package WordPress
- */
-
-/**
- * Tells WordPress to load the WordPress theme and output it.
- *
- * @var bool
- */
-define( 'WP_USE_THEMES', true );
-
-/** Loads the WordPress Environment and Template */
-require( dirname( __FILE__ ) . '/wp-blog-header.php' );
-812      0 --:--:-- --:--:-- --:--:-- 84000
-* Connection #0 to host localhost left intact
-```
-
-```bash
-# Check next server
-ssh stapp03 curl -kLv localhost:6300
-```
-
-```
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* About to connect() to localhost port 6300 (#0)
-*   Trying 127.0.0.1...
-* Connected to localhost (127.0.0.1) port 6300 (#0)
-> GET / HTTP/1.1
-> User-Agent: curl/7.29.0
-> Host: localhost:6300
-> Accept: */*
-> 
-< HTTP/1.1 200 OK
-< Date: Tue, 25 Oct 2022 09:02:25 GMT
-< Server: Apache/2.4.6 (CentOS) PHP/5.4.16
-< Last-Modified: Thu, 30 Nov 2017 23:11:00 GMT
-< ETag: "1a4-55f3b5d810900"
-< Accept-Ranges: bytes
-< Content-Length: 420
-< Content-Type: text/html; charset=UTF-8
-< 
-{ [data not shown]
-100   420  100   420    0     0  74507      0 --:--:-- --:--:-- --:--:-- 84000
-* Connection #0 to host localhost left intact
-<?php
-/**
- * Front to the WordPress application. This file doesn't do anything, but loads
- * wp-blog-header.php which does and tells WordPress to load the theme.
- *
- * @package WordPress
- */
-
-/**
- * Tells WordPress to load the WordPress theme and output it.
- *
- * @var bool
- */
-define( 'WP_USE_THEMES', true );
-
-/** Loads the WordPress Environment and Template */
-require( dirname( __FILE__ ) . '/wp-blog-header.php' );
-```
+Everything is working now, we are done.
