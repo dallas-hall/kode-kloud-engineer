@@ -19,7 +19,7 @@ None.
 
 ```bash
 # Connect to the storage server
-ssh maxa@ststor01
+ssh max@ststor01
 
 # Check current Linux version, it was Alpine Linux 3.4.6
 cat /etc/*rel*
