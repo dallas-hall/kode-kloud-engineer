@@ -1,4 +1,4 @@
-# Git Merge Branches
+# Git Rebase
 
 ## Task
 
