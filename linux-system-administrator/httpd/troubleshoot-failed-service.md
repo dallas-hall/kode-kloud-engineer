@@ -161,8 +161,8 @@ exit
 curl -kLv stapp01:6000
 
 # Check next server, it worked fine.
-curl -kLv stapp02:6000
 
+curl -kLv stapp02:6000
 # Check next server, it worked fine.
 curl -kLv stapp03:6000
 ```
