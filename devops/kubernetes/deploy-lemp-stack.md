@@ -6,8 +6,8 @@
 >
 > * Create some secrets for MySQL.
 >   * Create a secret named `mysql-root-pass` wih key/value pairs `name: password` and `value: R00t`
->   * Create a secret named `mysql-user-pass` with key/value pairs `name: username` and `value: kodekloud_gem` and `name: password` and `value: B4zNgHA7Ya`
->   * Create a secret named `mysql-db-url` with key/value pairs `name: database` and `value: kodekloud_db8`
+>   * Create a secret named `mysql-user-pass` with key/value pairs `name: username` and `value: kodekloud_gem` and `name: password` and `value: Rc5C9EyvbU`
+>   * Create a secret named `mysql-db-url` with key/value pairs `name: database` and `value: kodekloud_db6`
 >   * Create a secret named `mysql-host` with key/value pairs `name: host` and `value: mysql-service`
 > * Create a config map `php-config` for `php.ini` with `variables_order = "EGPCS"` data.
 > * Create a deployment named `lemp-wp`.
@@ -48,13 +48,30 @@ We can connect fine from Thor jumpbox. Click the App button gives an nginx 502 b
 ```bash
 # Create the Secrets
 k create secret generic mysql-root-pass --from-literal password=R00t
-k create secret generic mysql-user-pass --from-literal username=kodekloud_gem --from-literal password=B4zNgHA7Ya
-k create secret generic mysql-db-url --from-literal database=kodekloud_db8
+k create secret generic mysql-user-pass --from-literal username=kodekloud_gem --from-literal password=Rc5C9EyvbU
+k create secret generic mysql-db-url --from-literal database=kodekloud_db6
 k create secret generic mysql-host --from-literal host=mysql-service
 
 # Create the ConfigMap
+cat > cm.yaml
+```
+
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: php-config
+data:
+  php.ini: |
+    variables_order = "EGPCS"
+```
+
+This is equal to the below:
+
+```bash
 echo 'variables_order = "EGPCS"' > /tmp/php.ini
-k create cm php-config --from-file /tmp/php.ini
+k create cm php-config-2 --from-file /tmp/php.ini
 
 # Create the Deployment.
 cat > d.yaml
@@ -114,8 +131,7 @@ spec:
         - containerPort: 80
         volumeMounts:
         - name: php-ini
-          mountPath: /opt/docker/etc/php/php.ini
-          subPath: php.ini
+          mountPath: /opt/docker/etc/php/
         env: *env_var # Reference a Go Anchor (i.e. macro). This will inject everything inside of of the Anchor here.
       volumes:
       - name: php-ini
@@ -124,6 +140,7 @@ spec:
           items:
           - key: php.ini
             path: php.ini
+
 ```
 
 ```bash
@@ -201,3 +218,7 @@ Connected successfully
 ```
 
 Testing by clicking the App buttons also shows it worked. We are done.
+
+Kode Kloud Engineer review suggestion:
+
+> I think the problem is with php-ini volumeMount in the nginx-php-container in your deployment yaml file. The mountPath should be `/opt/docker/etc/php` (omitting the final `php.ini`). This is because the path at which the volume is mounted is actually the concatenation of mountPath and subPath (the location of the volume would be `{mountPath}/{subPath}` or in your case `{/opt/docker/etc/php}/{php.ini}`)
