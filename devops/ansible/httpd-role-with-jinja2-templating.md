@@ -79,10 +79,6 @@ cat > /home/thor/ansible/role/httpd/templates/index.html.j2
 ```
 This file was created using Ansible on {{ inventory_hostname }}
 ```
-```bash
-# Update the role.
-cat > /home/thor/ansible/role/httpd/tasks/main.yml
-```
 
 Close the file with control + d i.e. `^D`
 
@@ -111,7 +107,7 @@ cat > /home/thor/ansible/role/httpd/tasks/main.yml
     dest: /var/www/html/index.html
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: '0744'
+    mode: '0755'
 ```
 
 ```bash
@@ -133,10 +129,10 @@ curl -Lv http://stapp01
 > Accept: */*
 > 
 < HTTP/1.1 200 OK
-< Date: Wed, 17 Jan 2024 04:18:27 GMT
+< Date: Thu, 18 Jan 2024 03:11:11 GMT
 < Server: Apache/2.4.37 (CentOS Stream)
-< Last-Modified: Wed, 17 Jan 2024 04:18:11 GMT
-< ETag: "2f-60f1c88f5b3ed"
+< Last-Modified: Thu, 18 Jan 2024 03:10:20 GMT
+< ETag: "2f-60f2fb422b726"
 < Accept-Ranges: bytes
 < Content-Length: 47
 < Content-Type: text/html; charset=UTF-8
