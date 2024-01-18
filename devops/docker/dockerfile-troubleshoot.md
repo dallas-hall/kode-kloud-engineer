@@ -24,7 +24,6 @@
 
 ## Steps
 
-
 ```bash
 # Connect to application servers
 ssh steve@stapp02
@@ -60,7 +59,6 @@ Step 2/8 : RUN sed -i "s/Listen 80/Listen 8080/g" /usr/local/apache2/conf.d/http
 sed: can't read /usr/local/apache2/conf.d/httpd.conf: No such file or directory
 The command '/bin/sh -c sed -i "s/Listen 80/Listen 8080/g" /usr/local/apache2/conf.d/httpd.conf' returned a non-zero code: 2
 ```
-
 
 ```bash
 # Fix the current error.
@@ -144,7 +142,7 @@ Successfully tagged my-apache2:latest
 
 ```bash
 # Try to run the image
-docker run -dit --name my-running-app -p 8080:80 my-apache2
+docker run -dit --name my-running-app -p 8080:8080 my-apache2
 
 # View the running cointainers
 docker ps -a
@@ -153,6 +151,35 @@ docker ps -a
 ```
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                     PORTS                  NAMES
 3e192d6fb14c        my-apache2          "httpd-foreground"       9 seconds ago       Up 5 seconds               0.0.0.0:8080->80/tcp   my-running-app
+```
+
+
+```bash
+# Test container connectivity. It worked.
+curl -Lv localhost:8080
+```
+
+```
+* Rebuilt URL to: localhost:8080/
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to localhost (127.0.0.1) port 8080 (#0)
+> GET / HTTP/1.1
+> Host: localhost:8080
+> User-Agent: curl/7.61.1
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Date: Thu, 18 Jan 2024 06:15:03 GMT
+< Server: Apache/2.4.43 (Unix) OpenSSL/1.1.1d
+< Last-Modified: Thu, 18 Jan 2024 06:11:15 GMT
+< ETag: "16-60f323b2006c0"
+< Accept-Ranges: bytes
+< Content-Length: 22
+< Content-Type: text/html
+< 
+* Connection #0 to host localhost left intact
+This Dockerfile works!
 ```
 
 We are done.
