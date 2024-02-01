@@ -49,7 +49,7 @@ sudo -i
 cd /node_app
 
 # Create the Dockerfile.
-cat > /Dockerfile
+cat > Dockerfile
 ```
 
 ```dockerfile
