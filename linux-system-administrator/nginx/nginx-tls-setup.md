@@ -3,11 +3,11 @@
 ## Task
 
 > The system admins team of xFusionCorp Industries needs to deploy a new application on App Server 3 in Stratos Datacenter. They have some pre-requites to get ready that server for application deployment. Prepare the server as per requirements shared below:
-> 
+>
 > * Install and configure nginx on App Server 2.
 > * On App Server 3 there is a self signed SSL certificate and key present at location `/tmp/nautilus.crt` and `/tmp/nautilus.key`. Move them to some appropriate location and deploy the same in Nginx.
 > * Create an `index.html` file with content `Welcome!` under Nginx document root.
-> 
+>
 > For final testing try to access the App Server 3 link (either hostname or IP) from jump host using `curl` command. For example `curl -Ik https://<app-server-ip>/`.
 
 ## Preliminary Steps
@@ -50,7 +50,7 @@ ss -lntp | grep nginx
 ```
 
 ```
-State    Recv-Q   Send-Q     Local Address:Port        Peer Address:Port   Process                                                                    
+State    Recv-Q   Send-Q     Local Address:Port        Peer Address:Port   Process
 ...
 LISTEN   0        511              0.0.0.0:80               0.0.0.0:*       users:(("nginx",pid=1836,fd=6), ...)
 LISTEN   0        511                 [::]:80                  [::]:*       users:(("nginx",pid=1836,fd=7), ...)
@@ -59,7 +59,7 @@ LISTEN   0        511                 [::]:80                  [::]:*       user
 
 We can see `nginx` listening for http on port 80.
 
-```
+```bash
 # Make the certificate and private key folders
 mkdir -p -m 755 /etc/pki/nginx/private
 
@@ -116,7 +116,7 @@ ss -lntp
 ```
 
 ```
-State    Recv-Q   Send-Q     Local Address:Port        Peer Address:Port   Process                                                                    
+State    Recv-Q   Send-Q     Local Address:Port        Peer Address:Port   Process
 ...
 LISTEN   0        511              0.0.0.0:443              0.0.0.0:*       users:(("nginx",pid=1836,fd=8), ...)
 LISTEN   0        511              0.0.0.0:80               0.0.0.0:*       users:(("nginx",pid=1836,fd=6), ...)
@@ -156,7 +156,7 @@ curl -kLv http://localhost
 > Host: localhost
 > User-Agent: curl/7.61.1
 > Accept: */*
-> 
+>
 < HTTP/1.1 200 OK
 < Server: nginx/1.14.1
 < Date: Wed, 10 Jan 2024 04:46:11 GMT
@@ -166,7 +166,7 @@ curl -kLv http://localhost
 < Connection: keep-alive
 < ETag: "659e210b-9"
 < Accept-Ranges: bytes
-< 
+<
 Welcome!
 * Connection #0 to host localhost left intact
 ```
@@ -224,7 +224,7 @@ curl -kLv https://localhost
 > Host: localhost
 > User-Agent: curl/7.61.1
 > Accept: */*
-> 
+>
 * TLSv1.3 (IN), TLS handshake, [no content] (0):
 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
 * TLSv1.3 (IN), TLS handshake, [no content] (0):
@@ -234,7 +234,7 @@ curl -kLv https://localhost
 * TLSv1.3 (OUT), TLS app data, [no content] (0):
 * TLSv1.3 (IN), TLS app data, [no content] (0):
 * TLSv1.3 (IN), TLS app data, [no content] (0):
-< HTTP/2 200 
+< HTTP/2 200
 < server: nginx/1.14.1
 < date: Wed, 10 Jan 2024 04:46:28 GMT
 < content-type: text/html
@@ -242,7 +242,7 @@ curl -kLv https://localhost
 < last-modified: Wed, 10 Jan 2024 04:46:03 GMT
 < etag: "659e210b-9"
 < accept-ranges: bytes
-< 
+<
 Welcome!
 * Connection #0 to host localhost left intact
 ```
@@ -266,7 +266,7 @@ curl -kLv http://stapp03
 > Host: stapp03
 > User-Agent: curl/7.61.1
 > Accept: */*
-> 
+>
 < HTTP/1.1 200 OK
 < Server: nginx/1.14.1
 < Date: Wed, 10 Jan 2024 04:46:54 GMT
@@ -276,7 +276,7 @@ curl -kLv http://stapp03
 < Connection: keep-alive
 < ETag: "659e210b-9"
 < Accept-Ranges: bytes
-< 
+<
 Welcome!
 * Connection #0 to host stapp03 left intact
 ```
@@ -334,7 +334,7 @@ curl -kLv https://stapp03
 > Host: stapp03
 > User-Agent: curl/7.61.1
 > Accept: */*
-> 
+>
 * TLSv1.3 (IN), TLS handshake, [no content] (0):
 * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
 * TLSv1.3 (IN), TLS handshake, [no content] (0):
@@ -343,7 +343,7 @@ curl -kLv https://stapp03
 * Connection state changed (MAX_CONCURRENT_STREAMS == 128)!
 * TLSv1.3 (OUT), TLS app data, [no content] (0):
 * TLSv1.3 (IN), TLS app data, [no content] (0):
-< HTTP/2 200 
+< HTTP/2 200
 < server: nginx/1.14.1
 < date: Wed, 10 Jan 2024 04:47:12 GMT
 < content-type: text/html
@@ -351,7 +351,7 @@ curl -kLv https://stapp03
 < last-modified: Wed, 10 Jan 2024 04:46:03 GMT
 < etag: "659e210b-9"
 < accept-ranges: bytes
-< 
+<
 Welcome!
 * Connection #0 to host stapp03 left intact
 ```
