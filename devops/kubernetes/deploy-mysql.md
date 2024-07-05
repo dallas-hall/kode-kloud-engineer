@@ -208,6 +208,9 @@ spec:
 Close the file with control + d i.e. `^D`
 
 ```bash
+# Deploy the Service
+k apply -f np.yml
+
 # Check the NodePort service.
 k get svc
 ```
