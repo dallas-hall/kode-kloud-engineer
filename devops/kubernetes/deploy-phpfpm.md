@@ -2,7 +2,17 @@
 
 ## Task
 
-> The Nautilus Application Development team is planning to deploy one of the php-based application on Kubernetes cluster. As per discussion with DevOps team they have decided to use `nginx` and `phpfpm`. Additionally, they shared some custom configuration requirements. Below you can find more details. Please complete the task as per requirements mentioned below:<br><br>1) Create a service to expose this app, the service type must be `NodePort`, nodePort should be `30012`.<br>2.) Create a config map `nginx-config` for nginx.conf as we want to add some custom settings for nginx.conf.<br>a) Change default port `80` to `8092` in nginx.conf.<br>b) Change default document root `/usr/share/nginx` to `/var/www/html` in nginx.conf.<br>c) Update directory index to `index index.html index.htm index.php` in nginx.conf.<br>3.) Create a pod named `nginx-phpfpm` .<br>b) Create a shared volume `shared-files` that will be used by both containers (nginx and phpfpm) also it should be a `emptyDir` volume.<br>c) Map the `ConfigMap` we declared above as a volume for nginx container. Name the volume as `nginx-config-volume`, mount path should be `/etc/nginx/nginx.conf` and subPath should be nginx.conf<br>d) Nginx container should be named as `nginx-container` and it should use `nginx:latest` image. PhpFPM container should be named as `php-fpm-container` and it should use `php:7.1-fpm` image.<br>e) The shared volume `shared-files` should be mounted at `/var/www/html` location in both containers. Copy `/opt/index.php` from jump host to the nginx document root inside `nginx` container, once done you can access the app using App
+> The Nautilus Application Development team is planning to deploy one of the php-based application on Kubernetes cluster. As per discussion with DevOps team they have decided to use `nginx` and `phpfpm`. Additionally, they shared some custom configuration requirements. Below you can find more details. Please complete the task as per requirements mentioned below:
+> 1. Create a service to expose this app, the service type must be `NodePort`, nodePort should be `30012`.
+> 2. Create a config map `nginx-config` for `nginx.conf` as we want to add some custom settings for `nginx.conf`.
+>     * Change default port `80` to `8095` in nginx.conf.
+>     * Change default document root `/usr/share/nginx` to `/var/www/html` in `nginx.conf`.
+>     * Update directory index to `index index.html index.htm index.php` in `nginx.conf`.
+> 3. Create a pod named `nginx-phpfpm` .
+>     * Create a shared volume `shared-files` that will be used by both containers (nginx and phpfpm) also it should be a `emptyDir` volume.
+>     * Map the `ConfigMap` we declared above as a volume for nginx container. Name the volume as `nginx-config-volume`, mount path should be `/etc/nginx/nginx.conf` and `subPath` should be `nginx.conf`.
+>     * Nginx container should be named as `nginx-container` and it should use `nginx:latest` image. PhpFPM container should be named as `php-fpm-container` and it should use `php:8.2-fpm-alpine` image.
+>     * The shared volume `shared-files` should be mounted at `/var/www/html` location in both containers. Copy `/opt/index.php` from jump host to the nginx document root inside `nginx` container, once done you can access the app using App
 
 ## Preliminary Steps
 
@@ -29,8 +39,8 @@ k get no -o wide
 ```
 
 ```
-NAME                      STATUS   ROLES                  AGE    VERSION                          INTERNAL-IP   EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION   CONTAINER-RUNTIME
-kodekloud-control-plane   Ready    control-plane,master   145m   v1.20.5-rc.0.18+c4af4684437b37   172.17.0.2    <none>        Ubuntu 20.10   5.4.0-1092-gcp   containerd://1.5.0-beta.0-69-gb3f240206
+NAME                      STATUS   ROLES           AGE   VERSION                     INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                                      KERNEL-VERSION   CONTAINER-RUNTIME
+kodekloud-control-plane   Ready    control-plane   46m   v1.27.3-44+b5c876a05b7bbd   172.17.0.2    <none>        Ubuntu Mantic Minotaur (development branch)   5.4.0-1106-gcp   containerd://1.7.1-2-g8f682ed69
 ```
 
 ```bash
@@ -52,7 +62,7 @@ data:
     }
     http {
       server {
-        listen 8092;
+        listen 8095;
         server_name localhost;
         location / {
           root /var/www/html;
@@ -66,14 +76,8 @@ Close the file with control + d i.e. `^D`
 
 ```bash
 # Create Config Map
-k apply  -f cm.yaml
-```
+k apply -f cm.yaml
 
-```
-configmap/nginx-config create
-```
-
-```bash
 # Create Pod YAML
 cat > pod.yaml
 ```
@@ -90,17 +94,17 @@ spec:
   - image: nginx:latest
     name: nginx-container
     ports:
-    - containerPort: 8092
+    - containerPort: 8095
     volumeMounts:
     - mountPath: /var/www/html
       name: shared-files
     - mountPath: /etc/nginx/nginx.conf
       name: nginx-config-volume
       subPath: nginx.conf
-  - image: php:7.1-fpm
+  - image: php:8.2-fpm-alpine
     name: php-fpm-container
     ports:
-    - containerPort: 8092
+    - containerPort: 8095
     volumeMounts:
     - mountPath: /var/www/html
       name: shared-files
@@ -122,22 +126,7 @@ Close the file with control + d i.e. `^D`
 ```bash
 # Create Pod
 k apply -f pod.yaml
-```
 
-```
-pod/nginx-phpfpm created
-```
-```bash
-# Check Pods
-k get pods -o wide
-```
-
-```
-NAME           READY   STATUS    RESTARTS   AGE   IP           NODE                      NOMINATED NODE   READINESS GATES
-nginx-phpfpm   2/2     Running   0          59s   10.244.0.5   kodekloud-control-plane   <none>           <none>
-```
-
-```bash
 # Create NodePort YAML
 cat > svc.yaml
 ```
@@ -152,9 +141,9 @@ metadata:
   name: nginx-phpfpm
 spec:
   ports:
-  - port: 8092
+  - port: 8095
     protocol: TCP
-    targetPort: 8092
+    targetPort: 8095
     nodePort: 30012
   selector:
     app: nginx-phpfpm
@@ -167,14 +156,8 @@ Close the file with control + d i.e. `^D`
 
 ```bash
 # Create NodePort
-k apply -f nodeport.yaml
-```
+k apply -f svc.yaml
 
-```
-service/nginx-phpfpm created
-```
-
-```bash
 # Get homepage content
 cat /opt/index.php
 ```
@@ -185,7 +168,7 @@ It works!
 
 ```bash
 # Create homepage
-k exec nginx-phpfpm -c php-fpm-container -- bash -c 'echo "It works!" > /var/www/html/index.php'
+k exec nginx-phpfpm -c php-fpm-container -- sh -c 'echo "It works!" > /var/www/html/index.php'
 k exec nginx-phpfpm -c php-fpm-container -- cat /var/www/html/index.php
 ```
 
@@ -193,4 +176,4 @@ k exec nginx-phpfpm -c php-fpm-container -- cat /var/www/html/index.php
 It works!
 ```
 
-Testing by clicking the App buttons shows it worked.
+Testing by clicking the App buttons shows it worked. We are done.
