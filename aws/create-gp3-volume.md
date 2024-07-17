@@ -24,7 +24,7 @@
 Follow the steps at https://docs.aws.amazon.com/ebs/latest/userguide/ebs-creating-volume.html or https://docs.aws.amazon.com/cli/latest/reference/ec2/create-volume.html
 
 ```bash
-# Create the key pair
+# Create the GP3 Volume.
 aws ec2 create-volume \
     --volume-type gp3 \
     --size 2 \
