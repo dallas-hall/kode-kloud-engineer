@@ -21,3 +21,13 @@
 ## Steps
 
 Follow the steps at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html
+
+```bash
+# Create the key pair
+aws ec2 create-key-pair \
+    --key-name nautilus-kp \
+    --key-type rsa \
+    --key-format pem \
+    --query "KeyMaterial" \
+    --output text > nautilus-kp.pem
+```
