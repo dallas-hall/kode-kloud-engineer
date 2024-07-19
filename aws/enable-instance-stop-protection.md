@@ -23,6 +23,7 @@ Follow the steps at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-stop
 
 ```bash
 # Get instance ID
+aws ec2 describe-instances
 ```
 
 <details>
