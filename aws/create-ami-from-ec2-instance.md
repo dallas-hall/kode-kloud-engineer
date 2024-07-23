@@ -1,4 +1,4 @@
-# AWS Create Key Pair
+# AWS Create AMI From EC2 Instance
 
 ## Task
 
@@ -9,19 +9,9 @@
 
 ## Research
 
-* AWS create key pair.
-  * https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html
+* Create AMI from Ec2.
+  * https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/tkv-create-ami-from-instance.html
 
 ## Steps
 
-Follow the steps at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html
-
-```bash
-# Create the key pair
-aws ec2 create-key-pair \
-    --key-name nautilus-kp \
-    --key-type rsa \
-    --key-format pem \
-    --query "KeyMaterial" \
-    --output text > nautilus-kp.pem
-```
+Follow the steps at https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/tkv-create-ami-from-instance.html
