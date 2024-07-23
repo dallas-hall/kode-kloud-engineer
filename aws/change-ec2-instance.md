@@ -9,8 +9,9 @@
 
 ## Research
 
-* AWS AMI from EC2 instasnce.
-  * https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/tkv-create-ami-from-instance.html
+* AWS EC2
+  * https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-resize.html
+  * https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-resize.html#change-instance-type-of-ebs-backed-instance
 
 ## Steps
 
