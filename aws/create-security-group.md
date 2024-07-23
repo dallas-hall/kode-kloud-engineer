@@ -10,11 +10,6 @@
 > * Add the inbound rule of type `HTTP` with port range of `80` Enter the source CIDR range of `0.0.0.0/0`.
 > * Add another inbound rule of type `SSH`, with port range of `22`. Enter the source CIDR range of `0.0.0.0/0`.
 
-## Preliminary Steps
-
-1. Check the architecture map at https://www.lucidchart.com/documents/view/58e22de2-c446-4b49-ae0f-db79a3318e97/0_0
-2. Check server details at https://kodekloudhub.github.io/kodekloud-engineer/docs/projects/nautilus
-
 ## Research
 
 * Security Groups:

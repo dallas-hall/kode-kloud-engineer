@@ -6,11 +6,6 @@
 >
 > An instance named `datacenter-ec2` and a volume named `datacenter-volume` already exists in `us-east-1` region. Attach the `datacenter-volume` volume to the `datacenter-ec2` instance, make sure to set the device name to `/dev/sdb` while attaching the volume.
 
-## Preliminary Steps
-
-1. Check the architecture map at https://www.lucidchart.com/documents/view/58e22de2-c446-4b49-ae0f-db79a3318e97/0_0
-2. Check server details at https://kodekloudhub.github.io/kodekloud-engineer/docs/projects/nautilus
-
 ## Research
 
 * AWS attach EBS volume.

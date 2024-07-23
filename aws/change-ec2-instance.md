@@ -7,16 +7,10 @@
 > 1. Change the instance type from `t2.micro` to `t2.nano` for `xfusion-ec2` instance.
 > 2. Make sure the ec2 instance `xfusion-ec2` is in running state after the change.
 
-## Preliminary Steps
-
-1. Check the architecture map at https://www.lucidchart.com/documents/view/58e22de2-c446-4b49-ae0f-db79a3318e97/0_0
-2. Check server details at https://kodekloudhub.github.io/kodekloud-engineer/docs/projects/nautilus
-
 ## Research
 
-* AWS EC2
-  * https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-resize.html
-  * https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-resize.html#change-instance-type-of-ebs-backed-instance
+* AWS AMI from EC2 instasnce.
+  * https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/tkv-create-ami-from-instance.html
 
 ## Steps
 

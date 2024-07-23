@@ -8,11 +8,6 @@
 > * Attach the `nautilus-eni` network interface to the `nautilus-ec2` instance.
 > * Make sure status is `attached` before submitting the task.
 
-## Preliminary Steps
-
-1. Check the architecture map at https://www.lucidchart.com/documents/view/58e22de2-c446-4b49-ae0f-db79a3318e97/0_0
-2. Check server details at https://kodekloudhub.github.io/kodekloud-engineer/docs/projects/nautilus
-
 ## Research
 
 * AWS attach Elastic network interface.

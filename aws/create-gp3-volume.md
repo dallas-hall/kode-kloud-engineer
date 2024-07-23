@@ -8,10 +8,6 @@
 > * Name of the volume should be `devops-volume`.
 > * Volume type must be `gp3`.
 > * Volume size must be `2 GiB`.
-## Preliminary Steps
-
-1. Check the architecture map at https://www.lucidchart.com/documents/view/58e22de2-c446-4b49-ae0f-db79a3318e97/0_0
-2. Check server details at https://kodekloudhub.github.io/kodekloud-engineer/docs/projects/nautilus
 
 ## Research
 
