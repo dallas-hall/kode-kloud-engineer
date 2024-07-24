@@ -17,7 +17,7 @@
 Follow the steps at https://docs.aws.amazon.com/IAM/latest/UserGuide/id_groups_create.html or https://docs.aws.amazon.com/cli/latest/reference/iam/create-group.html
 
 ```bash
-# Create the user.
+# Create the group.
 aws iam create-group \
     --group-name iamgroup_james
 ```
