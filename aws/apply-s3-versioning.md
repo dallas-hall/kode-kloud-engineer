@@ -16,6 +16,6 @@
 Follow the steps at https://docs.aws.amazon.com/AmazonS3/latest/userguide/manage-versioning-examples.html
 
 ```bash
-# Create the key pair
+# Enable versioning.
 aws s3api put-bucket-versioning --bucket datacenter-s3-5764 --versioning-configuration Status=Enabled
 ```
