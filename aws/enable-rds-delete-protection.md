@@ -8,7 +8,7 @@
 
 ## Research
 
-* AWS EC2
+* AWS RDS
   * https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_DeleteInstance.html
   * https://docs.aws.amazon.com/cli/latest/reference/rds/modify-db-instance.html#examples
 

@@ -8,7 +8,7 @@
 
 ## Research
 
-* AWS create key pair.
+* AWS S3.
   * https://docs.aws.amazon.com/AmazonS3/latest/userguide/manage-versioning-examples.html
 
 ## Steps

@@ -8,7 +8,7 @@
 
 ## Research
 
-* AWS EC2
+* AWS RDS
   * https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_CreateSnapshot.html
 
 ## Steps

@@ -8,7 +8,7 @@
 
 ## Research
 
-* AWS create key pair.
+* AWS S3.
   * https://docs.aws.amazon.com/AmazonS3/latest/userguide/copy-object.html
   * https://docs.aws.amazon.com/cli/latest/reference/s3/cp.html
 
