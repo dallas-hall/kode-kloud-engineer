@@ -9,7 +9,7 @@
 
 ## Research
 
-* Create AMI from Ec2.
+* Create AMI from EC2.
   * https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/tkv-create-ami-from-instance.html
 
 ## Steps
